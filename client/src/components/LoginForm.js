@@ -11,7 +11,7 @@ function LoginForm(props) {
 
   const handleSubmit = (event) => {
       event.preventDefault();
-      context?.setMessage('');
+      context.setMessage('');
       
       if(username.trim() === '' || password.trim() === '' || password.length < 6)
         context.setMessage('Invalid Username or Password')
@@ -71,7 +71,7 @@ function LoginForm(props) {
 
             <Row>
               <Col> <Button size="lg" variant="primary" type="submit" onClick={handleSubmit}>Login</Button></Col>
-              <Col sm={9}>{context?.message && <Alert  variant='danger' onClose={() => context.setMessage('')} dismissible>{context?.message}</Alert> }</Col>
+              <Col sm={9}>{context.message && <Alert  variant='danger' onClose={() => context.setMessage('')} dismissible>{context.message}</Alert> }</Col>
             </Row>
             
           </Card.Body>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Container, Col } from 'react-bootstrap';
 import { withRouter, Switch, Route, Redirect } from 'react-router-dom';
 import { AdminContext } from './AdminContext';
@@ -9,6 +9,9 @@ import NavBar from './components/NavBar';
 import LoginForm from './components/LoginForm';
 import  SurveyList from './components/SurveyList';
 import SurveyForm from './components/SurveyForm';
+
+// API
+import API from './api/api';
 
 const SURVEYS = [
   {
@@ -71,7 +74,19 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   // auth 
-  // useEffect (...)
+    // auth after first mount 
+    useEffect(() => {
+      const checkAuth = async () => {
+        try {
+          await API.getUserInfo();
+          setLoggedIn(true);
+        } catch (err) {
+          setLoading(false); // not logged but loaded
+        }
+      };
+      checkAuth();
+    }, []);
+
 
   // mount
   // useEffect(...)
@@ -79,15 +94,28 @@ function App() {
   // add question
 
   // delete question
-
-  // login
-  const login = async(credentials) => {
-    // TODO: to be implemented
+ 
+  /**
+   * logs user in and sets proper states
+   * @param {*} credentials 
+   */
+  const login = async (credentials) => {
+    try {
+      const user = await API.login(credentials);
+      setLoggedIn(true);
+      setMessage( `Welcome, ${user}!`);
+    } catch (err) {
+      setMessage(err);
+    }
   }
 
-  // logout
+   /**
+   * logs user out and clears states
+   */
   const logout = async () => {
-    // TODO: to be implemented
+    await API.logout();
+    setLoggedIn(false);
+    setMessage('');
   }
 
   const context = {
