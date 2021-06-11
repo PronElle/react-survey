@@ -26,18 +26,20 @@ const NavBar = (props) => {
             </Col>
 
             <Nav className="ml-md-auto">
-                {context?.loggedIn &&
+                {context.loggedIn &&
                 <>
                     <Nav.Link>{context.message}</Nav.Link>    
-                    <Nav.Link onClick = {() => {props.logout()}}>Logout</Nav.Link>    
+                    <Nav.Link onClick = {() => {props.logout()}}>Logout</Nav.Link>      
                 </>
                 }
-                <Nav.Link href="#">
-                    <Link to='/login'  style={{ paddingRight: 20 ,color: 'white' }}>
+                <Nav.Link>
+                    { !context.loggedIn && 
+                    <Link to='/login' className="link-text">
                         Login
                     </Link>
+                    }
                     {iconPersonCircle}
-                    </Nav.Link>
+                </Nav.Link>
             </Nav>
         </Navbar >
     );

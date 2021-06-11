@@ -11,7 +11,7 @@ function LoginForm(props) {
 
   const handleSubmit = (event) => {
       event.preventDefault();
-      context.setMessage('');
+      context?.setMessage('');
       
       if(username.trim() === '' || password.trim() === '' || password.length < 6)
         context.setMessage('Invalid Username or Password')
