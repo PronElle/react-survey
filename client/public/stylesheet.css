@@ -38,13 +38,16 @@
 }
 
 
-.survey-row{
-    border: solid 2px orange;
-    width: 95%;
+.survey-row {
+    border: solid 2px orange !important;
+    width: 90%;
     padding-top: 18px;
     border-radius: 5px;
-    margin: 1em; 
+    margin: 1em;
+    /* margin-left: 5%;  */
 }
+
+
 
 .question {
   border: solid 1px orange;
