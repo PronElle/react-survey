@@ -9,6 +9,9 @@ const morgan = require('morgan'); // logging middleware
  const adminDao = require('./dao/admin_dao');
  const session = require('express-session'); // session middleware
 
+/* --- Survey stuff --- */
+const surveyDao = require('./dao/survey_dao');
+
 // init express
 const port = 3001;
 const app = express();
@@ -62,9 +65,14 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-/* ------ APIs ------ */
 
-// TODO: to be implemented
+/* ------ Survey APIs ------ */
+
+app.get('/surveys', (req, res) => {
+  surveyDao.getSurveys(req.user?.id)
+           .then(surveys => res.json(surveys))
+           .catch(err => res.status(500).json(err));
+})
 
 
 /* --- Login APIs ---- */

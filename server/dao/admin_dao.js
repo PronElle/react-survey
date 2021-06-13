@@ -1,4 +1,5 @@
 'use strict';
+
 const Admin = require('../entity/admin');
 const db = require('../db');
 const bcrypt = require('bcrypt');
