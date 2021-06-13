@@ -1,3 +1,5 @@
+import SurveyModel from '../models/SurveyModel';
+
 /* --- Auth APIs --- */
 
 async function login(credentials) {
@@ -8,8 +10,6 @@ async function login(credentials) {
     },
     body: JSON.stringify(credentials),
   });
-
-  console.log(response);
   
   if(response.ok) {
     const user = await response.json();
@@ -41,5 +41,17 @@ async function getUserInfo() {
   }
 }
 
-const API = { login, logout, getUserInfo};
+/* --- Survey APIs --- */
+async function getSurveys(admin){
+   const url = '/surveys';
+   const response = await fetch(url);
+   const surveysJson = await response.json();
+
+   if(response.ok)
+     return surveysJson.map(s => new SurveyModel(s.id, s.title, s.answers, s.creator));
+   else
+     throw surveysJson; 
+}
+
+const API = { login, logout, getUserInfo, getSurveys };
 export default API;

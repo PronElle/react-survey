@@ -48,24 +48,31 @@ function LoginForm(props) {
             <Form>
 
               <Form.Group className='login-form' controlId='username'>
-                  <InputGroup>
-                    <InputGroup.Prepend>
+                  <InputGroup hasValidation>
+                    <InputGroup.Prepend >
                       <InputGroup.Text>{iconPerson}</InputGroup.Text>
                     </InputGroup.Prepend>
 
-                    <Form.Control size="lg" type='email' value={username} placeholder="email" onChange={ev => setUsername(ev.target.value)}/>
+                    <Form.Control size="lg" type='email' value={username} placeholder="email" onChange={ev => setUsername(ev.target.value)} isInvalid={context.message !== ''}/>
                   </InputGroup>
               </Form.Group>
               
               <Form.Group className='login-form' controlId='password'>
-                <InputGroup>
+                <InputGroup hasValidation>
                   <InputGroup.Prepend>
                    <InputGroup.Text>{iconLock}</InputGroup.Text>
                   </InputGroup.Prepend>
                   
-                  <Form.Control size="lg" type='password' value={password} placeholder="password" onChange={ev => setPassword(ev.target.value)}/>
+                  <Form.Control size="lg" type='password' value={password} placeholder="password" onChange={ev => setPassword(ev.target.value)} isInvalid={context.message !== ''}/>
+                  
+                  {/* <Form.Control.Feedback type="invalid">
+                    {context.message}
+                  </Form.Control.Feedback> */}
                 </InputGroup>  
               </Form.Group> 
+              
+                
+              
 
             </Form>
 

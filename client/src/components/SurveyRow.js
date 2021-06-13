@@ -9,7 +9,7 @@ function SurveyRow(props) {
   let context = useContext(AdminContext);
 
   return (
-    <ListGroup.Item id={survey.id} className="survey-row" variant="warning">
+    <ListGroup.Item  id={survey.id} className="survey-row" variant="warning">
         <div className="d-flex w-100 justify-content-between ">
           <div className="custom-control">
             <label>{survey.title}</label>

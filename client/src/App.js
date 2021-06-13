@@ -1,7 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { Container, Col } from 'react-bootstrap';
-import { withRouter, Switch, Route, Redirect } from 'react-router-dom';
+import { Container, Col, Button } from 'react-bootstrap';
+import { withRouter, Switch, Route, Redirect, Link } from 'react-router-dom';
 import { AdminContext } from './AdminContext';
 
 // components
@@ -13,87 +13,120 @@ import SurveyForm from './components/SurveyForm';
 // API
 import API from './api/api';
 
-const SURVEYS = [
-  {
-  "id": 0,
-  "creator": "john",
-  "title": "Sei d'accordo che gli informatici siano i migliori ?",
-  "answers": 15,
-  },
-  {
-    "id": 1,
-    "creator": "john",
-    "title": "Approvi l'abolizione di fisica I ? ",
-    "answers": 3 
-  },
-  {
-    "id": 2,
-    "creator": "john",
-    "title": "che ne so",
-    "answers": 0 
-    },
-    {
-      "id": 3,
-      "creator": "john",
-      "title": "foo survey on foo",
-      "answers": 0 
-    },
-];
 
 
 const QUESTIONS = [
  {
    "survey_id": 0,
-   "question": "domanda ?",
-   "options": [{"optionText":"5"},{"optionText":"3"},{"optionText":"2"}],
+   "text": "What is 3 + 2 ?",
+   "options": [{"optionText":"It's 5", "id": 0},{"optionText":"supercalifragilisichespiralidoso", "id": 2},{"optionText":"2", "id": 3}],
    "open":false,
    "required":false,
  },
  {
   "survey_id": 0,
-  "question": "domanda1 ?",
-  "options": [{"optionText":"88"},{"optionText":"33"},{"optionText":"23"}],
+  "text": "What is 3 time 11 ? ",
+  "options": [{"optionText":"88", "id": 4},{"optionText":"33", "id": 5},{"optionText":"23", "id": 6}],
   "open":false,
   "required":false,
   },
   {
-    "survey_id": 1,
-    "question" :"how build the app ?",
-    "options": ["vinayak", "sarthak", "somil", "devesh"],
+    "survey_id": 0,
+    "text": "What is 3 + 2 ?",
+    "options": [{"optionText":"It's 5", "id": 0},{"optionText":"supercalifragilisichespiralidoso", "id": 2},{"optionText":"2", "id": 3}],
+    "open":false,
+    "required":false,
+  },
+  {
+   "survey_id": 0,
+   "text": "What is 3 time 11 ? ",
+   "options": [{"optionText":"88", "id": 0},{"optionText":"33", "id": 1},{"optionText":"23", "id": 2}],
+   "open":false,
+   "required":false,
+   }, {
+    "survey_id": 0,
+    "text": "What is 3 + 2 ?",
+    "options": [{"optionText":"It's 5", "id": 0},{"optionText":"supercalifragilisichespiralidoso", "id": 2},{"optionText":"2", "id": 3}],
     "open":false,
     "required":true,
-  }
+  },
+  {
+   "survey_id": 0,
+   "text": "What is 3 time 11 ? ",
+   "options": [{"optionText":"88", "id": 0},{"optionText":"33", "id": 1},{"optionText":"23", "id": 2}],
+   "open":false,
+   "required":false,
+   },
+   {
+    "survey_id": 0,
+    "text": "What is 3 + 2 ?",
+    "options": [{"optionText":"It's 5", "id": 0},{"optionText":"supercalifragilisichespiralidoso", "id": 2},{"optionText":"2", "id": 3}],
+    "open":false,
+    "required":false,
+  },
+  {
+   "survey_id": 0,
+   "text": "What is 3 time 11 ? ",
+   "options": [{"optionText":"88", "id": 0},{"optionText":"33", "id": 1},{"optionText":"23", "id": 2}],
+   "open":false,
+   "required":false,
+   },
+  {
+    "survey_id": 1,
+    "text" :"what do you think is this app built for ?",
+    "options": undefined,
+    "open":true,
+    "required":true,
+  },
+  {
+    "survey_id": 1,
+    "text": "What is 3 + 2 ?",
+    "options": [{"optionText":"It's 5", "id": 0},{"optionText":"supercalifragilisichespiralidoso", "id": 2},{"optionText":"2", "id": 3}],
+    "open":false,
+    "required":false,
+  },
 ];
 
+
 function App() {
-  const [surveys, setSurveys] = useState(SURVEYS);
+  const [surveys, setSurveys] = useState([]);
   const [questions, setQuestions] = useState(QUESTIONS);
+  const [records, setRecords] = useState([]);
 
   const [loggedIn, setLoggedIn] = useState(false);
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(true);
 
   // auth 
-    // auth after first mount 
-    useEffect(() => {
-      const checkAuth = async () => {
-        try {
-          await API.getUserInfo();
-          setLoggedIn(true);
-        } catch (err) {
-          setLoading(false); // not logged but loaded
-        }
-      };
-      checkAuth();
-    }, []);
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        await API.getUserInfo();
+        setLoggedIn(true);
+      } catch (err) {
+        setLoading(false); // not logged but loaded
+      }
+    };
+    checkAuth();
+  }, []);
 
 
   // mount
-  // useEffect(...)
+  useEffect(() => {
+    API.getSurveys()
+        .then( survs => {
+          setSurveys(survs);
+          setLoading(false);
+        })
+  }, [loggedIn, surveys.length]);
 
   // add question
 
   // delete question
+
+  // add option
+
+  // add record
  
   /**
    * logs user in and sets proper states
@@ -139,6 +172,8 @@ function App() {
               <h1>{loggedIn ? "Your Surveys" : "Available surveys"}</h1>
               <SurveyList surveys = {surveys} />
             </Col>
+            {loggedIn && <Link to="/add"><Button variant="primary" size="lg" className="fixed-right-bottom">New Survey</Button></Link>}
+
           </Route>
 
           <Route path='/survey/:id' render={ ({match}) => {
@@ -146,6 +181,10 @@ function App() {
               return surveys.find(survey => survey.id == match.params.id) ?
                    <SurveyForm questions={questions.filter(q => q.survey_id == match.params.id)} setQuestions={setQuestions}/> : <Redirect to='/surveys'/>
           }}/>
+
+          {/* <Route path='/add'>
+
+          </Route> */}
         
 
           <Route>
