@@ -2,9 +2,10 @@ import React from 'react';
 import { Modal, Form, Button, Row, Col } from 'react-bootstrap';
 import { useState } from 'react';
 import { iconPlus } from '../icons';
+import  uuid  from 'react-uuid';
 
 function QuestionForm(props) {
-    let { questions, setQuestions, modalOpen, toggleModal } = props;
+    let { addQuestion, modalOpen, toggleModal } = props;
     
     const [content, setContent] = useState(''); // content of question
     const [openEnded, setOpenEnded ] = useState(false);
@@ -22,19 +23,29 @@ function QuestionForm(props) {
             setErrorMessage('Please, fill the question content');
         } 
         
-        if (!openEnded){
+        else if (!openEnded){
             let ans_size = options.length;
-            if (min > max ||  min >  ans_size ){
-            setErrorMessage('Min and Max don\'t respect the constraints');
-            valid = false;
-         }
+            if (ans_size === 0){
+               setErrorMessage('Multiple-choice question must have at least 1 option');
+               valid = false;     
+            }
+            else if(min > max ||  min >  ans_size ){
+                setErrorMessage('Min and Max don\'t respect the constraints');
+                valid = false;
+            }
         }
         
         if(valid) { 
             toggleModal();
-            // crea question object (non per forza model)
-            // addQuestion(question)
-            console.log(options);
+            const question = {
+                id: uuid(),
+                content: content,
+                min: min,
+                max: max,
+                options: !openEnded ? options : undefined
+            }
+            addQuestion(question);
+            console.log(question);
         }
     }
 
@@ -47,9 +58,7 @@ function QuestionForm(props) {
 
     const toggleSwitch = () => {
         setOpenEnded(!openEnded);
-        // delete "old" options on purpose!
-        if ( options.length > 0)
-            setOptions([]);
+        setErrorMessage('');
     }
 
     const modifyOption = (opt, i) => {
@@ -74,8 +83,7 @@ function QuestionForm(props) {
                     <span style={{ color: 'red' }}>{errorMessage}</span>
                 </Form.Group>
 
-                {
-                    !openEnded && 
+                { !openEnded && 
                     options.map((opt, i) => 
                         <Form.Group>
                             <Form.Control type='text' placeholder="utitled option"
@@ -84,22 +92,27 @@ function QuestionForm(props) {
                         )
 
                  }
-                 <Row className="my-1 mr-sm-4" >
-                <Col>
-                    <span onClick={() => addOption()}>{iconPlus}</span>
-                </Col>
-                <Col>
-                <Form.Check 
-                    type="switch"
-                    id="custom-switch"
-                    label="open-endend"
-                    value={openEnded}
-                    onChange={() => toggleSwitch()}
-                />
-                </Col>
+                 <Row>
+                     <Col>
+                        <Form.Check 
+                            type="switch"
+                            id="custom-switch"
+                            label="open-endend"
+                            value={openEnded}
+                            onChange={() => toggleSwitch()}
+                        />
+                    </Col>
+                    { !openEnded &&
+                        <Col>
+                            <span onClick={() => addOption()}>{iconPlus} Add Option</span>
+                        </Col>
+                    }
+                </Row>
+
                 {
                     !openEnded &&
-                    <>
+                    
+                    <Row>
                     <Col>
                     <Form.Label className="my-1 mr-2" htmlFor="inlineFormCustomSelectPref">min</Form.Label>  
                     <Form.Control as="select" className="" id="inlineFormCustomSelectPref" custom onChange={ ev => setMin(ev.target.value)} >
@@ -132,11 +145,10 @@ function QuestionForm(props) {
                         <option value="10">10</option>
                     </Form.Control>
                     </Col>
-                    </>
+                    </Row>
 
                 }
 
-                </Row>
             </Modal.Body>
 
             <Modal.Footer>
