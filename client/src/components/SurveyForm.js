@@ -8,21 +8,11 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 // props dovrebbe contenere una modalità (write, read)
 function SurveyForm(props){
     const [name, setName]  = useState('');
-    const [answers, setAnswers] = ([]);
+    const [answers, setAnswers] = useState([]);
 
     const [errorMessage, setErrorMessage] = useState();
     const [submitted, setSubmitted] = useState(false)
 
-
-    function handleOnDragEnd(result) {
-        if (!result.destination) return;
-
-        const items = Array.from(props.question);
-        const [reorderedItem] = items.splice(result.source.index, 1);
-        items.splice(result.destination.index, 0, reorderedItem);
-
-        props.setQuestions(items);
-    }
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -34,6 +24,20 @@ function SurveyForm(props){
         }
 
         setSubmitted(true);
+    }
+
+    const onAnswer = (qno, ans) => {
+        console.log(ans, qno);
+        var Answers = [...answers];
+        Answers[qno] = ans;
+
+        setAnswers(Answers);
+        console.log(answers);
+    }
+
+    const ansAt = (qno) => {
+        var Answers = [...answers];
+        return Answers[qno];
     }
  
     const context = useContext(AdminContext);
@@ -49,7 +53,7 @@ function SurveyForm(props){
             </Form.Group>
 
             {
-                props.questions.map( question => 
+                props.questions.map( (question, qno) => 
                 <>
                 <Form.Group className="question">
                     <Form.Label>{question.text}{question.required && ' *'}</Form.Label>
@@ -58,7 +62,7 @@ function SurveyForm(props){
                         question.open ? 
                         <Form.Control as="textarea" maxLength="200"  rows={3}/>
                         :
-                        question.options.map(option => <Form.Check custom type="checkbox" id={`custom-checkbox-${option.id}`} label={option.optionText} />)
+                        question.options.map((option, ansno) => <Form.Check custom type="checkbox" value={ansAt(ansno)} id={`custom-checkbox-${option.id}`} label={option.optionText} onChange={ev => onAnswer(qno, ansno)}/>)
                     }
                 </Form.Group>
                 </>   

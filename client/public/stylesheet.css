@@ -49,13 +49,6 @@
 
 
 
-.question {
-  border: solid 1px orange;
-  border-radius: .2em;
-  padding: .5em .8em .5em .5em;
-  margin-bottom: 1em;
-}
-
 .link-text {
     color: white;
     padding-right: 10px;
@@ -70,6 +63,27 @@ h1{
     margin-right:20%;
     width: 60%;
 }
+
+
+/* --- survey ---*/
+.survey-header{ 
+  font-size: 30px;
+  width: 600px;
+  height: 100px;
+}
+
+
+.card-header{
+    border-top: solid 7px orange;
+}
+
+.question {
+    border: solid 1px #d0d0d0;
+    border-radius: .2em;
+    padding: .5em .8em .5em .5em;
+    margin-bottom: 1em;
+  }
+  
 
 /* avoid resizing text area in open-ended 
 questions */

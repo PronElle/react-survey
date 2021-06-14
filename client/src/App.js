@@ -9,6 +9,7 @@ import NavBar from './components/NavBar';
 import LoginForm from './components/LoginForm';
 import  SurveyList from './components/SurveyList';
 import SurveyForm from './components/SurveyForm';
+import AddSurveyForm from './components/AddSurveyForm';
 
 // API
 import API from './api/api';
@@ -17,69 +18,69 @@ import API from './api/api';
 
 const QUESTIONS = [
  {
-   "survey_id": 0,
+   "survey_id": 1,
    "text": "What is 3 + 2 ?",
    "options": [{"optionText":"It's 5", "id": 0},{"optionText":"supercalifragilisichespiralidoso", "id": 2},{"optionText":"2", "id": 3}],
    "open":false,
    "required":false,
  },
  {
-  "survey_id": 0,
+  "survey_id": 1,
   "text": "What is 3 time 11 ? ",
   "options": [{"optionText":"88", "id": 4},{"optionText":"33", "id": 5},{"optionText":"23", "id": 6}],
   "open":false,
   "required":false,
   },
   {
-    "survey_id": 0,
+    "survey_id": 1,
     "text": "What is 3 + 2 ?",
     "options": [{"optionText":"It's 5", "id": 0},{"optionText":"supercalifragilisichespiralidoso", "id": 2},{"optionText":"2", "id": 3}],
     "open":false,
     "required":false,
   },
   {
-   "survey_id": 0,
+   "survey_id": 1,
    "text": "What is 3 time 11 ? ",
    "options": [{"optionText":"88", "id": 0},{"optionText":"33", "id": 1},{"optionText":"23", "id": 2}],
    "open":false,
    "required":false,
    }, {
-    "survey_id": 0,
+    "survey_id": 1,
     "text": "What is 3 + 2 ?",
     "options": [{"optionText":"It's 5", "id": 0},{"optionText":"supercalifragilisichespiralidoso", "id": 2},{"optionText":"2", "id": 3}],
     "open":false,
     "required":true,
   },
   {
-   "survey_id": 0,
+   "survey_id": 1,
    "text": "What is 3 time 11 ? ",
    "options": [{"optionText":"88", "id": 0},{"optionText":"33", "id": 1},{"optionText":"23", "id": 2}],
    "open":false,
    "required":false,
    },
    {
-    "survey_id": 0,
+    "survey_id": 1,
     "text": "What is 3 + 2 ?",
     "options": [{"optionText":"It's 5", "id": 0},{"optionText":"supercalifragilisichespiralidoso", "id": 2},{"optionText":"2", "id": 3}],
     "open":false,
     "required":false,
   },
   {
-   "survey_id": 0,
+   "survey_id": 1,
    "text": "What is 3 time 11 ? ",
    "options": [{"optionText":"88", "id": 0},{"optionText":"33", "id": 1},{"optionText":"23", "id": 2}],
    "open":false,
    "required":false,
    },
   {
-    "survey_id": 1,
+    "survey_id": 2,
     "text" :"what do you think is this app built for ?",
     "options": undefined,
     "open":true,
     "required":true,
   },
   {
-    "survey_id": 1,
+    "survey_id": 2,
     "text": "What is 3 + 2 ?",
     "options": [{"optionText":"It's 5", "id": 0},{"optionText":"supercalifragilisichespiralidoso", "id": 2},{"optionText":"2", "id": 3}],
     "open":false,
@@ -104,7 +105,7 @@ function App() {
         await API.getUserInfo();
         setLoggedIn(true);
       } catch (err) {
-        setLoading(false); // not logged but loaded
+    //    setLoading(false); // not logged but loaded
       }
     };
     checkAuth();
@@ -177,14 +178,16 @@ function App() {
           </Route>
 
           <Route path='/survey/:id' render={ ({match}) => {
-                    // eslint-disable-next-line
+            if(!loading){
+                    // eslint-disable-next-line 
               return surveys.find(survey => survey.id == match.params.id) ?
                    <SurveyForm questions={questions.filter(q => q.survey_id == match.params.id)} setQuestions={setQuestions}/> : <Redirect to='/surveys'/>
+            }
           }}/>
 
-          {/* <Route path='/add'>
-
-          </Route> */}
+          <Route path='/add'>
+            <AddSurveyForm />
+          </Route>
         
 
           <Route>

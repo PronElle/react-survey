@@ -42,7 +42,7 @@ async function getUserInfo() {
 }
 
 /* --- Survey APIs --- */
-async function getSurveys(admin){
+async function getSurveys(){
    const url = '/surveys';
    const response = await fetch(url);
    const surveysJson = await response.json();
