@@ -11,7 +11,6 @@
 }
 
 
-
 .list-group-item-action:hover {
     background-color: #9becae;
 }
@@ -24,18 +23,22 @@
     position: absolute;
     z-index: 1030;
     margin: 0 1.5rem 1.5rem 0;
+    
 }
 
-
+/* Add new question button */
 .fixed-right-bottom-circular {
     right: 0;
     bottom: 0;
     position: absolute;
     border-radius: 90%;
-    z-index: 1030;
     margin: 0 1.5rem 1.5rem 0;
 }
 
+span{
+    cursor: pointer; 
+    padding-left: auto;
+}
 
 .btn-form {
     margin: 0  1rem 1rem 0;
@@ -47,7 +50,6 @@
     margin-bottom: 35px;
 }
 
-
 .survey-row {
     border: solid 2px orange !important;
     width: 90%;
@@ -56,8 +58,6 @@
     margin: 1em;
     /* margin-left: 5%;  */
 }
-
-
 
 .link-text {
     color: white;
@@ -68,32 +68,43 @@ h1{
     padding-left: 20px;
 }
 
+
+
+/* --- survey ---*/
 .survey-form {
     margin-left: 20%;
     margin-right:20%;
     width: 60%;
 }
 
-
-/* --- survey ---*/
 .survey-header{ 
   font-size: 30px;
   width: 600px;
-  height: 100px;
+  height: 70px;
+  border: 0 !important;
+  outline-width: 0 !important;
+  background: #f7f7f7 !important;
 }
 
 
 .card-header{
+    border: 1px;
     border-top: solid 7px orange;
 }
 
 .question {
-    border: solid 1px #d0d0d0;
-    border-radius: .2em;
+    border: solid 1px #d0d0d0  !important;
     padding: .5em .8em .5em .5em;
-    margin-bottom: 1em;
-  }
-  
+	border-radius: 12px !important; /* delete to remove rounded borders*/
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.questions {
+  width: 640px;
+  margin-top: 10px;
+
+}
 
 /* avoid resizing text area in open-ended 
 questions */

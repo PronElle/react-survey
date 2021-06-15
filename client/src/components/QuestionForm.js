@@ -42,10 +42,10 @@ function QuestionForm(props) {
                 content: content,
                 min: min,
                 max: max,
-                options: !openEnded ? options : undefined
+                options: !openEnded ? options.map( o => ({"id": uuid(), "text": o}))
+                                      : undefined
             }
             addQuestion(question);
-            console.log(question);
         }
     }
 
@@ -102,53 +102,54 @@ function QuestionForm(props) {
                             onChange={() => toggleSwitch()}
                         />
                     </Col>
-                    { !openEnded &&
-                        <Col>
-                            <span onClick={() => addOption()}>{iconPlus} Add Option</span>
-                        </Col>
+                    
+                    <Col>
+                    { openEnded ? <Form.Check type="switch" id="custom-switch-req" 
+                                              label="required" 
+                                              onChange={() => setMin(1)}/> 
+                                 :
+                                 <span onClick={() => addOption()}>{iconPlus} Add Option</span>
                     }
+                    </Col>
+                   
                 </Row>
 
-                {
-                    !openEnded &&
-                    
+                { !openEnded && 
                     <Row>
-                    <Col>
-                    <Form.Label className="my-1 mr-2" htmlFor="inlineFormCustomSelectPref">min</Form.Label>  
-                    <Form.Control as="select" className="" id="inlineFormCustomSelectPref" custom onChange={ ev => setMin(ev.target.value)} >
-                        <option value="0">0</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                        <option value="9">9</option>
-                        <option value="10">10</option>
-                    </Form.Control>
-                    </Col>
+                        <Col>
+                            <Form.Label className="my-1 mr-2" htmlFor="inlineFormCustomSelectPref">min</Form.Label>  
+                            <Form.Control as="select" className="" id="inlineFormCustomSelectPref" custom onChange={ ev => setMin(ev.target.value)} >
+                                <option value="0">0</option>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                            </Form.Control>
+                        </Col>
 
-                    <Col>
-                    <Form.Label className="my-1 mr-2"  htmlFor="inlineFormCustomSelectPref">max</Form.Label>  
-                    <Form.Control as="select" className="" id="inlineFormCustomSelectPref" custom onChange={ ev => setMax(ev.target.value)}>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4">4</option>
-                        <option value="5">5</option>
-                        <option value="6">6</option>
-                        <option value="7">7</option>
-                        <option value="8">8</option>
-                        <option value="9">9</option>
-                        <option value="10">10</option>
-                    </Form.Control>
-                    </Col>
+                        <Col>
+                            <Form.Label className="my-1 mr-2"  htmlFor="inlineFormCustomSelectPref">max</Form.Label>  
+                            <Form.Control as="select" className="" id="inlineFormCustomSelectPref" custom onChange={ ev => setMax(ev.target.value)}>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                                <option value="6">6</option>
+                                <option value="7">7</option>
+                                <option value="8">8</option>
+                                <option value="9">9</option>
+                                <option value="10">10</option>
+                            </Form.Control>
+                        </Col>
                     </Row>
-
                 }
-
             </Modal.Body>
 
             <Modal.Footer>
