@@ -11,6 +11,7 @@ import LoginForm from './components/LoginForm';
 import  SurveyList from './components/SurveyList';
 import SurveyForm from './components/SurveyForm';
 import AddSurveyForm from './components/AddSurveyForm';
+import AnswersSlideShow from './components/AnswersSlideShow';
 
 // API
 import API from './api/api';
@@ -45,8 +46,8 @@ function App() {
           setSurveys(survs);
           setLoading(false);
         });
-  }, [loggedIn, surveys.length]);
-  
+  }, [loggedIn]);
+
 
   // add new Survey (and its questions)
   const addSurvey = (title, _questions) => {
@@ -111,11 +112,12 @@ function App() {
 
           <Route path='/survey/:id' render={ ({match}) => {
             if(!loading){
-                    // eslint-disable-next-line 
+                // eslint-disable-next-line 
               const survey = surveys.find(survey => survey.id == match.params.id); 
-              return survey ?
-                   <SurveyForm surveyid={survey.id} questions={questions} setQuestions={setQuestions}
-                               title={survey.title} addReply={addReply}/> : <Redirect to='/surveys'/>
+              return !survey ? <Redirect to='/surveys'/> : 
+                     loggedIn ? <AnswersSlideShow title={survey.title} surveyid={survey.id} questions={questions} setQuestions={setQuestions}/> :
+                               <SurveyForm surveyid={survey.id} questions={questions} setQuestions={setQuestions}
+                                    title={survey.title} addReply={addReply}/> 
             }
           }}/>
 

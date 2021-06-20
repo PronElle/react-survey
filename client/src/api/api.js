@@ -141,5 +141,6 @@ async function addReply (reply){
 
 
 
-const API = { login, logout, getUserInfo, getSurveys, getQuestions, createQuestions, createSurvey, updateSurvey, addReply };
+const API = { login, logout, getUserInfo, getSurveys, createSurvey, getQuestions, updateSurvey, createQuestions, addReply, getReplies };
+
 export default API;

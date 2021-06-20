@@ -6,7 +6,7 @@ import { AdminContext } from '../context/AdminContext';
 
 function OpenEndedQuestion(props) {
     let { question, deleteQuestion, disabled } = props;
-    let [answer, setAnswer] = useState('');
+    let [answer, setAnswer] = useState(props.answer ? props.answer : '');
     const context = useContext(AdminContext);
 
     return (

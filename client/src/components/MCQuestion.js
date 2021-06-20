@@ -6,7 +6,7 @@ import { AdminContext } from '../context/AdminContext';
 
 function MCQuestion(props) {
     let { question, deleteQuestion, disabled } = props;
-    const [answer, setAnswer] = useState([]);
+    let [answer, setAnswer] = useState(props.answers ? props.answers : []);
     const context = useContext(AdminContext);
 
     const handleCheckChange = (check, id) => {

@@ -11,11 +11,11 @@ import API from '../api/api';
 
 // props dovrebbe contenere una modalità (write, read)
 function SurveyForm(props){
-    const { surveyid, questions, setQuestions, title } = props;
-    const [name, setName]  = useState(''); // name of user
-    const [answers, setAnswers] = useState({});
+    const { surveyid, questions, setQuestions } = props;
+    const [name, setName]  = useState(props.name ? props.name : ''); // name of user
+    const [answers, setAnswers] = useState(props.answers ? props.answers : {});
     const [errorMessage, setErrorMessage] = useState('');
-    const [submitted, setSubmitted] = useState(false)
+    const [submitted, setSubmitted] = useState(false);
 
     const scrollRef = useRef(null)
 
@@ -76,10 +76,13 @@ function SurveyForm(props){
         setAnswers(Answers);
     }
 
+    const ansAt = (qid) => {
+        return answers[qid] || [];
+    }
+
     const context = useContext(AdminContext);
 
-    return (
-        !context.loggedIn && 
+    return ( 
       <Container fluid>
        {submitted && <Redirect to='/surveys'></Redirect>}
 
@@ -99,19 +102,19 @@ function SurveyForm(props){
                 <Form.Group className="question round-border" >
                     {
                         question.options ? 
-                        <MCQuestion question={question} onAnswer={onAnswer}/>
+                        <MCQuestion answers={() => ansAt(question.id)} question={question} onAnswer={onAnswer} disabled={props.disabled}/>
                         :
-                        <OpenEndedQuestion question={question} onAnswer={onAnswer}/>
+                        <OpenEndedQuestion answers={props.answers} question={question} onAnswer={onAnswer} disabled={props.disabled}/>
                     }
                 </Form.Group>  
                 )
 
             }
-            
+            { !context.loggedIn && 
             <Button variant="primary" className="btn-form" onClick={ev => handleSubmit(ev)}>
                 Submit
             </Button>
-               
+            }  
         </Form>
     </Container>
    );

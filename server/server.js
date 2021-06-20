@@ -7,10 +7,10 @@ const {check, validationResult} = require('express-validator'); // validation mi
  /* --- Authentication related imports ---- */
  const passport = require('passport');
  const passportLocal = require('passport-local');
- const adminDao = require('./dao/admin_dao');
  const session = require('express-session'); // session middleware
 
 /* --- DAOs  --- */
+const adminDao = require('./dao/admin_dao');
 const surveyDao = require('./dao/survey_dao');
 const questionDao = require('./dao/question_dao');
 const replyDao = require('./dao/reply_dao');
@@ -69,7 +69,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
-/* ------ Survey APIs ------ */
+/* ------ Survey server ------ */
 
 app.get('/surveys', (req, res) => {
   surveyDao.getSurveys(req.user?.id)
@@ -93,7 +93,7 @@ app.post('/surveys', [
            .catch(error => res.status(550).json(error));
  });
 
-/* ------ Question APIs ----- */
+/* ------ Question server ----- */
 app.get('/questions', (req, res) => {
   questionDao.getQuestions(req.query.surveyid)
            .then(questions => res.json(questions))
@@ -117,8 +117,15 @@ app.post('/questions', [
 
 
 
-/* --- Reply APIs ---- */
-app.post('/replies/:id', [
+/* --- Reply server ---- */
+app.get('/replies', isLoggedIn, (req, res) => {
+  replyDao.getReplies(req.query.surveyid)
+           .then(replies => res.json(replies))
+           .catch(err => res.status(500).json(err));
+});
+
+
+app.post('/replies/:id', isLoggedIn, [
   check('name').isLength({'min': 1})
   // altri check 
 ], (req, res) => {
@@ -134,7 +141,9 @@ app.post('/replies/:id', [
 });
 
 
-/* --- Login APIs ---- */
+
+
+/* --- Login server ---- */
 
 // login
 app.post('/sessions', function(req, res, next) {

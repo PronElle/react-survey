@@ -29,8 +29,8 @@ exports.getReplies = (surveyid) => {
             if(err) 
                reject(err)
             else {
-                let questions = rows.map( row => createReplyEntity(row));
-                resolve(questions);
+                let replies = rows.map( row => createReplyEntity(row));
+                resolve(replies);
             }
         })
     });  
