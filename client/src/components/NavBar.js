@@ -25,7 +25,7 @@ const NavBar = (props) => {
                 </Form>
             </Col>
 
-            <Nav className="ml-md-auto">
+            <Nav  className="ml-md-auto">
                 {context.loggedIn &&
                 <>
                     <Nav.Link>{context.message}</Nav.Link>    

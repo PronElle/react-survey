@@ -17,81 +17,47 @@ import API from './api/api';
 
 
 const QUESTIONS = [
- {
-   "survey_id": 1,
-   "text": "What is 3 + 2 ?",
-   "options": [{"optionText":"It's 5", "id": 0},{"optionText":"supercalifragilisichespiralidoso", "id": 2},{"optionText":"2", "id": 3}],
-   "open":false,
-   "required":false,
- },
- {
-  "survey_id": 1,
-  "text": "What is 3 time 11 ? ",
-  "options": [{"optionText":"88", "id": 4},{"optionText":"33", "id": 5},{"optionText":"23", "id": 6}],
-  "open":false,
-  "required":false,
-  },
-  {
-    "survey_id": 1,
-    "text": "What is 3 + 2 ?",
-    "options": [{"optionText":"It's 5", "id": 0},{"optionText":"supercalifragilisichespiralidoso", "id": 2},{"optionText":"2", "id": 3}],
-    "open":false,
-    "required":false,
-  },
+
   {
    "survey_id": 1,
-   "text": "What is 3 time 11 ? ",
-   "options": [{"optionText":"88", "id": 0},{"optionText":"33", "id": 1},{"optionText":"23", "id": 2}],
-   "open":false,
-   "required":false,
+   "content": "What is 3 time 11 ? ",
+   "options": [{"text":"88", "id": 128},{"text":"33", "id": 1},{"text":"23", "id": 2}],
+   "min": 1,
+   "max": 1,
    }, {
     "survey_id": 1,
-    "text": "What is 3 + 2 ?",
-    "options": [{"optionText":"It's 5", "id": 0},{"optionText":"supercalifragilisichespiralidoso", "id": 2},{"optionText":"2", "id": 3}],
-    "open":false,
-    "required":true,
+    "content": "What is 3 + 2 ?",
+    "options": [{"text":"It's 5", "id": 3},{"text":"supercalifragilisichespiralidoso", "id": 4},{"text":"2", "id": 5}],
+    "min": 1,
+    "max": 2,
   },
   {
    "survey_id": 1,
-   "text": "What is 3 time 11 ? ",
-   "options": [{"optionText":"88", "id": 0},{"optionText":"33", "id": 1},{"optionText":"23", "id": 2}],
-   "open":false,
-   "required":false,
-   },
-   {
-    "survey_id": 1,
-    "text": "What is 3 + 2 ?",
-    "options": [{"optionText":"It's 5", "id": 0},{"optionText":"supercalifragilisichespiralidoso", "id": 2},{"optionText":"2", "id": 3}],
-    "open":false,
-    "required":false,
-  },
-  {
-   "survey_id": 1,
-   "text": "What is 3 time 11 ? ",
-   "options": [{"optionText":"88", "id": 0},{"optionText":"33", "id": 1},{"optionText":"23", "id": 2}],
-   "open":false,
-   "required":false,
+   "content": "What is 3 time 11 ? ",
+   "options": [{"text":"88", "id": 6},{"text":"33", "id": 7},{"text":"23", "id": 8}],
+   "min": 0,
+   "max": 1,
    },
   {
     "survey_id": 2,
-    "text" :"what do you think is this app built for ?",
+    "content" :"what do you think is this app built for ?",
     "options": undefined,
-    "open":true,
-    "required":true,
+    "min": 1,
+   "max": 1,
   },
   {
     "survey_id": 2,
-    "text": "What is 3 + 2 ?",
-    "options": [{"optionText":"It's 5", "id": 0},{"optionText":"supercalifragilisichespiralidoso", "id": 2},{"optionText":"2", "id": 3}],
-    "open":false,
-    "required":false,
+    "content": "What is 3 + 2 ?",
+    "options": [{"text":"It's 5", "id": 199},{"text":"supercalifragilisichespiralidoso", "id": 2},{"text":"2", "id": 3}],
+    "min": 0,
+   "max": 1,
   },
 ];
 
 
 function App() {
   const [surveys, setSurveys] = useState([]);
-  const [questions, setQuestions] = useState(QUESTIONS);
+  const [questions, setQuestions] = useState([]);
   const [records, setRecords] = useState([]);
 
   const [loggedIn, setLoggedIn] = useState(false);
@@ -118,16 +84,21 @@ function App() {
         .then( survs => {
           setSurveys(survs);
           setLoading(false);
-        })
+        });
   }, [loggedIn, surveys.length]);
 
-  // add question
+  // add new Survey (and its questions)
+  const addSurvey = (title, _questions) => {
+    API.createSurvey(title)
+       .then(() => API.getSurveys().then(survs => setSurveys(survs)));
+    API.createQuestions(_questions);
+  }
 
-  // delete question
-
-  // add option
-
-  // add record
+  // add  a new record
+  const addRecord = (name, surveyid, answers) => {
+    // API.addRecord(...)
+    // update survey (num of peopel answering)
+  }
  
   /**
    * logs user in and sets proper states
@@ -173,20 +144,22 @@ function App() {
               <h1>{loggedIn ? "Your Surveys" : "Available surveys"}</h1>
               <SurveyList surveys = {surveys} />
             </Col>
-            {loggedIn && <Link to="/add"><Button variant="primary" size="lg" className="fixed-right-bottom">New Survey</Button></Link>}
+            {loggedIn && <Link to="/add"><Button variant="primary" size="lg" className="fixed-right-bottom-circular">+</Button></Link>}
 
           </Route>
 
           <Route path='/survey/:id' render={ ({match}) => {
             if(!loading){
                     // eslint-disable-next-line 
-              return surveys.find(survey => survey.id == match.params.id) ?
-                   <SurveyForm questions={questions.filter(q => q.survey_id == match.params.id)} setQuestions={setQuestions}/> : <Redirect to='/surveys'/>
+              const survey = surveys.find(survey => survey.id == match.params.id); 
+              return survey ?
+                   <SurveyForm surveyid={survey.id} questions={questions} setQuestions={setQuestions}
+                               title={survey.title}/> : <Redirect to='/surveys'/>
             }
           }}/>
 
           <Route path='/add'>
-            <AddSurveyForm />
+            <AddSurveyForm addSurvey={addSurvey}/>
           </Route>
         
 

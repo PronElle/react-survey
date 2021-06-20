@@ -8,7 +8,15 @@ const createSurveyObject = (row) => {
 }
 
 exports.createSurvey = (survey) => {
-
+    return new Promise((resolve, reject) => {
+        const query = 'INSERT INTO surveys(title, answers, admin) VALUES(?,?,?)';
+        db.run(query, [survey.title, survey.answers, survey.admin],  function (err) {
+            if(err)
+                reject(err);
+            else
+                resolve(this.lastID);
+        });
+    })
 }
 
 exports.getSurveys = (admin) => {

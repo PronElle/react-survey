@@ -2,6 +2,7 @@
 
 const express = require('express');
 const morgan = require('morgan'); // logging middleware
+const {check, validationResult} = require('express-validator'); // validation middleware
 
  /* --- Authentication related imports ---- */
  const passport = require('passport');
@@ -11,6 +12,7 @@ const morgan = require('morgan'); // logging middleware
 
 /* --- Survey stuff --- */
 const surveyDao = require('./dao/survey_dao');
+const questionDao = require('./dao/question_dao');
 
 // init express
 const port = 3001;
@@ -73,6 +75,46 @@ app.get('/surveys', (req, res) => {
            .then(surveys => res.json(surveys))
            .catch(err => res.status(500).json(err));
 })
+
+
+app.post('/surveys', [
+   check('title').isLength({'min': 1}) 
+ ], (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+      return res.status(422).json({ errors: errors.array() });
+  }
+
+  const survey = req.body;
+  survey['admin'] = req.user.id;
+  surveyDao.createSurvey(survey)
+           .then(() => res.status(250).end())
+           .catch(error => res.status(550).json(error));
+ });
+
+/* ------ Question APIs ----- */
+app.get('/questions', (req, res) => {
+  questionDao.getQuestions(req.query.surveyid)
+           .then(questions => res.json(questions))
+           .catch(err => res.status(500).json(err));
+})
+
+app.post('/questions', [
+  check('content').isLength({'min': 1})
+  // altri check 
+], (req, res) => {
+ const errors = validationResult(req);
+ if (!errors.isEmpty()) {
+     return res.status(422).json({ errors: errors.array() });
+ }
+
+ const question = req.body;
+ questionDao.createQuestion(question)
+          .then(() => res.status(250).end())
+          .catch(error => res.status(550).json(error));
+});
+
+/* --- Record APIs ---- */
 
 
 /* --- Login APIs ---- */

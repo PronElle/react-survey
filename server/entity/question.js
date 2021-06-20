@@ -1,13 +1,13 @@
 class Question {
-    constructor(id, text, survey, open, options, required){
+    constructor(id, content, options, min, max, survey){
         this.id = id; 
-        this.text = text; // question text
+        this.content = content; // question text
         this.survey = survey; // survey id
-        this.open = open;
-        if(!open)
-            this.options = options;
-             
-        this.required = required;
+        this.min = min;
+        this.max = max;
+        if(options)
+           this.options = options;
+        
     }
 }
 

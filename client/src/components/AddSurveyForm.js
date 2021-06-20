@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState, useContext} from 'react';
 import { AdminContext } from '../AdminContext';
-import { Form, Card, Row, Button, ListGroup, Container, Col } from 'react-bootstrap';
+import { Form, Row, Button, ListGroup, Container, Alert } from 'react-bootstrap';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import { Redirect } from 'react-router-dom';
 
@@ -9,13 +9,13 @@ import QuestionForm from './QuestionForm';
 import OpenEndedQuestion from './OpenEndedQuestion';
 import MCQuestion from './MCQuestion';
 
-function AddSurveyForm() {
+
+function AddSurveyForm(props) {
     const [surveyTitle, setSurveyTitle] = useState('');
     const [questions, setQuestions] = useState([]);
-    const [answers, setAnswers] = useState([]);
     const [submitted, setSubmitted] = useState(false);
     const [questionModalOpen, setQuestionModalOpen] = useState(false);
-
+    const [errorMsg, setErrorMsg] = useState('');
     const context = useContext(AdminContext);
 
     const toggleQuestionModal = () => {
@@ -25,14 +25,14 @@ function AddSurveyForm() {
     const handleSubmit = (event) => {
         event.preventDefault();
         // validation
-        if(surveyTitle.trim() === '' || questions.length === 0){
-            // error msg
-        } 
-        
-        // API.createSurvey(...)
-       // API.createQuestions(...)
-       // API.createAnswers(...)
-        setSubmitted(true);
+        if(surveyTitle.trim() === ''){
+            setErrorMsg('Survey\'s title can\'t be empty');
+        } else if (questions.length === 0)
+           setErrorMsg('Survey must contain at least one question');
+        else{
+           setSubmitted(true);
+           props.addSurvey(surveyTitle, questions);
+        }
     }
 
     const addQuestion = (question) => {
@@ -53,25 +53,26 @@ function AddSurveyForm() {
         setQuestions(items);
     }
 
-    // protect the root
     return (
         <Container fluid>
             {!context.loading && !context.loggedIn && <Redirect to='/surveys'/>}
-            <Row className="below-nav" >
+            {submitted && <Redirect to='/surveys'/>}
+            <Row className="below-nav my-2 my-lg-0 mx-auto d-none d-sm-block" >
                 <DragDropContext onDragEnd={handleDragDrop}>
                     <Droppable droppableId="questions">
-                { provided =>  
+                    { provided =>  
                     <ListGroup className="mx-auto questions" {...provided.droppableProps} ref={provided.innerRef}>
-                        <Card>
-                            <Card.Header>
-                                <Form.Control size="lg"  className="survey-header" placeholder="Untitled Survey" value={surveyTitle}
-                                    onChange={ ev => setSurveyTitle(ev.target.value)}/>  
-                            </Card.Header>
-                        </Card>
+                        <ListGroup.Item className="survey-header round-border">
+                            <Form.Control size="lg"  className="survey-title" placeholder="Untitled Survey" value={surveyTitle}
+                                onChange={ ev => setSurveyTitle(ev.target.value)} isInvalid={errorMsg !== ''}/>  
+                             <Form.Control.Feedback type="invalid" >{errorMsg}</Form.Control.Feedback>
+                        </ListGroup.Item>
+
+
                         { questions.map( (q, i) => 
                                 <Draggable key={q.id} draggableId={q.id} index={i}>
                                     { provided =>
-                                    <ListGroup.Item className="question" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                                    <ListGroup.Item className="question round-border" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                                         {
                                             q.options ? <MCQuestion question={q} deleteQuestion={deleteQuestion} disabled={true}/> : <OpenEndedQuestion question={q} deleteQuestion={deleteQuestion} disabled={true}/>
                                         }
@@ -88,6 +89,7 @@ function AddSurveyForm() {
 
             {questionModalOpen && <QuestionForm addQuestion={addQuestion} modalOpen={questionModalOpen} toggleModal={toggleQuestionModal}/>}
             <Button variant="primary" size="lg" className="fixed-right-bottom-circular" onClick={() => toggleQuestionModal()}>&#43;</Button>
+            <Button variant="primary" size="lg" onClick={ev => handleSubmit(ev)}>submit</Button> 
         </Container>
         );
 }

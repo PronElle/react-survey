@@ -1,8 +1,10 @@
 class SurveyModel {
     constructor(id, title, answers, creator){
-        this.id = id;
+        if(id) 
+          this.id = id;
+
         this.title = title;
-        this.answers = answers; // number of people who answered
+        this.answers = answers || 0; // number of people who answered
         this.creator = creator; // admin id
     }
 }

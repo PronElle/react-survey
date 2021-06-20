@@ -29,7 +29,7 @@ function QuestionForm(props) {
                setErrorMessage('Multiple-choice question must have at least 1 option');
                valid = false;     
             }
-            else if(min > max ||  min >  ans_size ){
+            else if(min > max ||  min >  ans_size || max > ans_size ){
                 setErrorMessage('Min and Max don\'t respect the constraints');
                 valid = false;
             }
@@ -43,7 +43,7 @@ function QuestionForm(props) {
                 min: min,
                 max: max,
                 options: !openEnded ? options.map( o => ({"id": uuid(), "text": o}))
-                                      : undefined
+                                      : undefined,
             }
             addQuestion(question);
         }
@@ -58,6 +58,7 @@ function QuestionForm(props) {
 
     const toggleSwitch = () => {
         setOpenEnded(!openEnded);
+        setMin(0); // reset min
         setErrorMessage('');
     }
 
