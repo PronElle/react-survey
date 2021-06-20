@@ -3,7 +3,7 @@
 const Survey = require('../entity/survey');
 const db = require('../db');
 
-const createSurveyObject = (row) => {
+const createSurveyEntity = (row) => {
     return new Survey(row.id, row.title, row.answers, row.admin);
 }
 
@@ -29,7 +29,7 @@ exports.getSurveys = (admin) => {
             if(err) 
                reject(err)
             else {
-                let surveys = rows.map( row => createSurveyObject(row));
+                let surveys = rows.map( row => createSurveyEntity(row));
                 resolve(surveys);
             }
         })

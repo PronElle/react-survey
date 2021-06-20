@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState, useContext} from 'react';
-import { AdminContext } from '../AdminContext';
+import { AdminContext } from '../context/AdminContext';
 import { Form, Row, Button, ListGroup, Container, Alert } from 'react-bootstrap';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import { Redirect } from 'react-router-dom';

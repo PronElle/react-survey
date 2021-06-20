@@ -2,27 +2,29 @@ import React, {useState, useContext} from 'react'
 import { Form } from 'react-bootstrap';
 import { iconDelete, iconRequired } from '../icons';
 
-import { AdminContext } from '../AdminContext';
+import { AdminContext } from '../context/AdminContext';
 
 function MCQuestion(props) {
     let { question, deleteQuestion, disabled } = props;
-    const [answer, setAnswer] = useState(Array(question.options.length).fill(false));
+    const [answer, setAnswer] = useState([]);
     const context = useContext(AdminContext);
 
-    const handleCheckChange = (check, index) => {
-        let n_checked = answer.filter(c => c).length;
+    const handleCheckChange = (check, id) => {
+        let n_checked = answer.length;
         let answerUpd = [...answer];
         
         if(!check){   // if checked, uncheck 
-            answerUpd[index] = false;
+            answerUpd.splice(answerUpd.indexOf(id), 1);
             setAnswer(answerUpd);
+            props.onAnswer(question.id, answerUpd);
         } else if (n_checked < question.max){ // if unchecked, check if max respected 
-            answerUpd[index] = true;
+            answerUpd.push(id);
             setAnswer(answerUpd);
+            props.onAnswer(question.id, answerUpd);
         } else if ( question.max === 1 ) {// "for better" interaction
-            answerUpd = Array(answerUpd.length).fill(false);
-            answerUpd[index] = true;
+            answerUpd = [id];
             setAnswer(answerUpd);
+            props.onAnswer(question.id, answerUpd);
         }
     }
 
@@ -37,13 +39,13 @@ function MCQuestion(props) {
             <hr/>
             <Form>
                 {
-                question.options.map( ({text, id}, i) => 
+                question.options.map( ({text, id}) => 
                         <Form.Check custom type="checkbox" 
                                     id={id}
                                     label={text} 
                                     disabled={disabled}
-                                    checked={answer[i]}
-                                    onChange={ev => handleCheckChange(ev.target.checked, i)} />)
+                                    checked={answer.includes(id)}
+                                    onChange={ev => handleCheckChange(ev.target.checked, id)} />)
                 }       
             </Form>         
         </div>

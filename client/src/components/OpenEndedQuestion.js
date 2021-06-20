@@ -1,7 +1,7 @@
 import React, {useContext, useState} from 'react';
 import { Form } from 'react-bootstrap';
 import { iconDelete, iconRequired } from '../icons';
-import { AdminContext } from '../AdminContext';
+import { AdminContext } from '../context/AdminContext';
 
 
 function OpenEndedQuestion(props) {

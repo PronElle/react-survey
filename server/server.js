@@ -10,9 +10,10 @@ const {check, validationResult} = require('express-validator'); // validation mi
  const adminDao = require('./dao/admin_dao');
  const session = require('express-session'); // session middleware
 
-/* --- Survey stuff --- */
+/* --- DAOs  --- */
 const surveyDao = require('./dao/survey_dao');
 const questionDao = require('./dao/question_dao');
+const replyDao = require('./dao/reply_dao');
 
 // init express
 const port = 3001;
@@ -114,7 +115,23 @@ app.post('/questions', [
           .catch(error => res.status(550).json(error));
 });
 
-/* --- Record APIs ---- */
+
+
+/* --- Reply APIs ---- */
+app.post('/replies/:id', [
+  check('name').isLength({'min': 1})
+  // altri check 
+], (req, res) => {
+ const errors = validationResult(req);
+ if (!errors.isEmpty()) {
+     return res.status(422).json({ errors: errors.array() });
+ }
+
+ const reply = req.body;
+ replyDao.createReply(reply)
+          .then(() => res.status(250).end())
+          .catch(error => res.status(550).json(error));
+});
 
 
 /* --- Login APIs ---- */

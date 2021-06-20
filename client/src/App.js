@@ -2,7 +2,8 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { Container, Col, Button } from 'react-bootstrap';
 import { withRouter, Switch, Route, Redirect, Link } from 'react-router-dom';
-import { AdminContext } from './AdminContext';
+// admin context
+import { AdminContext } from './context/AdminContext';
 
 // components
 import NavBar from './components/NavBar';
@@ -15,50 +16,9 @@ import AddSurveyForm from './components/AddSurveyForm';
 import API from './api/api';
 
 
-
-const QUESTIONS = [
-
-  {
-   "survey_id": 1,
-   "content": "What is 3 time 11 ? ",
-   "options": [{"text":"88", "id": 128},{"text":"33", "id": 1},{"text":"23", "id": 2}],
-   "min": 1,
-   "max": 1,
-   }, {
-    "survey_id": 1,
-    "content": "What is 3 + 2 ?",
-    "options": [{"text":"It's 5", "id": 3},{"text":"supercalifragilisichespiralidoso", "id": 4},{"text":"2", "id": 5}],
-    "min": 1,
-    "max": 2,
-  },
-  {
-   "survey_id": 1,
-   "content": "What is 3 time 11 ? ",
-   "options": [{"text":"88", "id": 6},{"text":"33", "id": 7},{"text":"23", "id": 8}],
-   "min": 0,
-   "max": 1,
-   },
-  {
-    "survey_id": 2,
-    "content" :"what do you think is this app built for ?",
-    "options": undefined,
-    "min": 1,
-   "max": 1,
-  },
-  {
-    "survey_id": 2,
-    "content": "What is 3 + 2 ?",
-    "options": [{"text":"It's 5", "id": 199},{"text":"supercalifragilisichespiralidoso", "id": 2},{"text":"2", "id": 3}],
-    "min": 0,
-   "max": 1,
-  },
-];
-
-
 function App() {
   const [surveys, setSurveys] = useState([]);
   const [questions, setQuestions] = useState([]);
-  const [records, setRecords] = useState([]);
 
   const [loggedIn, setLoggedIn] = useState(false);
   const [message, setMessage] = useState('');
@@ -86,6 +46,7 @@ function App() {
           setLoading(false);
         });
   }, [loggedIn, surveys.length]);
+  
 
   // add new Survey (and its questions)
   const addSurvey = (title, _questions) => {
@@ -95,8 +56,8 @@ function App() {
   }
 
   // add  a new record
-  const addRecord = (name, surveyid, answers) => {
-    // API.addRecord(...)
+  const addReply = (reply) => {
+     API.addReply(reply);
     // update survey (num of peopel answering)
   }
  
@@ -140,7 +101,7 @@ function App() {
           }}/>
 
           <Route path='/surveys'>
-            <Col className="mx-auto below-nav">
+            <Col className="text-center below-nav">
               <h1>{loggedIn ? "Your Surveys" : "Available surveys"}</h1>
               <SurveyList surveys = {surveys} />
             </Col>
@@ -154,7 +115,7 @@ function App() {
               const survey = surveys.find(survey => survey.id == match.params.id); 
               return survey ?
                    <SurveyForm surveyid={survey.id} questions={questions} setQuestions={setQuestions}
-                               title={survey.title}/> : <Redirect to='/surveys'/>
+                               title={survey.title} addReply={addReply}/> : <Redirect to='/surveys'/>
             }
           }}/>
 

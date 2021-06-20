@@ -1,5 +1,7 @@
+/** --- item models --- */
 import SurveyModel from '../models/SurveyModel';
 import QuestionModel from '../models/QuestionModel';
+import ReplyModel from '../models/ReplyModel';
 
 /** --- Auth APIs --- */
 
@@ -111,8 +113,33 @@ async function createQuestions(questions){
    return null;
 }
 
-/**--- Record APIs --- */
-// ....
+/**--- Reply APIs --- */
 
-const API = { login, logout, getUserInfo, getSurveys, getQuestions, createQuestions, createSurvey, updateSurvey };
+async function getReplies(surveyid){
+  const url = '/replies?surveyid=' + surveyid;
+  
+  const response = await fetch(url);
+  const repliesJson = await response.json();
+
+  if(response.ok){
+    return repliesJson.map(r => new ReplyModel(r.id, r.name, r.answers ? JSON.parse(r.answers) : undefined, r.survey));
+  } else
+    throw repliesJson; 
+}
+
+
+async function addReply (reply){
+  reply.answers = JSON.stringify(reply.answers);
+  const response = await fetch('/replies/' + reply.survey, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(reply)
+    });  
+
+  return response.ok ? null : { 'err': 'POST error' };
+}
+
+
+
+const API = { login, logout, getUserInfo, getSurveys, getQuestions, createQuestions, createSurvey, updateSurvey, addReply };
 export default API;

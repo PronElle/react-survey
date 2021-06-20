@@ -3,7 +3,7 @@
 const Question = require('../entity/question');
 const db = require('../db');
 
-const createQuestionObject = (row) => {
+const createQuestionEntity = (row) => {
   return new Question(row.id, row.content, row.options, row.min, row.max, row.survey);
 }
 
@@ -28,7 +28,7 @@ exports.getQuestions = (surveyid) => {
             if(err) 
                reject(err)
             else {
-                let questions = rows.map( row => createQuestionObject(row));
+                let questions = rows.map( row => createQuestionEntity(row));
                 resolve(questions);
             }
         })

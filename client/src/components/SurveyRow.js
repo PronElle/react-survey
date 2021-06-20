@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { ListGroup } from 'react-bootstrap';
 import { iconReply, iconShow } from '../icons';
 import { Link } from 'react-router-dom';
-import { AdminContext } from '../AdminContext';
+import { AdminContext } from '../context/AdminContext';
 
 function SurveyRow(props) {
   let { survey } = props;

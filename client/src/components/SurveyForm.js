@@ -3,7 +3,7 @@ import {useContext, useState, useRef, useEffect} from 'react';
 import { Form, Button, Container, ListGroup} from 'react-bootstrap';
 import { Redirect } from 'react-router-dom';
 
-import { AdminContext } from '../AdminContext';
+import { AdminContext } from '../context/AdminContext';
 import MCQuestion from './MCQuestion';
 import OpenEndedQuestion from './OpenEndedQuestion';
 
@@ -11,11 +11,9 @@ import API from '../api/api';
 
 // props dovrebbe contenere una modalità (write, read)
 function SurveyForm(props){
-    const { surveyid, questions, setQuestions} = props;
-
+    const { surveyid, questions, setQuestions, title } = props;
     const [name, setName]  = useState(''); // name of user
-    const [answers, setAnswers] = useState(Array(questions.length).fill([])); // se me le passano da fuori, quelle,  sennò []
-
+    const [answers, setAnswers] = useState({});
     const [errorMessage, setErrorMessage] = useState('');
     const [submitted, setSubmitted] = useState(false)
 
@@ -24,9 +22,14 @@ function SurveyForm(props){
     const scrollTop = () => scrollRef.current.scrollIntoView() ;
 
     const checkAnswersOnRequested = () => {
-        console.log(answers)
-        return false;
-    //    return  answers.filter( ans => ans.length < q.min || ans.length > q.max).length !== 0;
+        return questions.filter( q => {
+            if(q.min > 0 && !(q.id in answers)) return true;
+            
+            if (q.min > 0 && q.id in answers){
+                return answers[q.id].length < q.min && answers[q.id].length > q.max ;
+            } 
+            return false;
+        }).length === 0;
     }
 
     const handleSubmit = (event) => {
@@ -46,12 +49,12 @@ function SurveyForm(props){
         }
 
         if(valid) {
-            // const record = {
-            //    name : name , 
-            //    survey: surveyid, 
-            //    answers: answers
-            //}
-            // props.addRecord(record);
+            const reply = {
+               name : name , 
+               survey: surveyid, 
+               answers: answers
+            }
+            props.addReply(reply);
             setSubmitted(true);
         } else {
             scrollTop();   
@@ -65,16 +68,9 @@ function SurveyForm(props){
         })
     }, [surveyid]);
 
-    // useEffect(() => {
-    //     API.getRecord(surveyid)
-    //         .then( record => {
-    //         setRecord(record);
-    //     })
-    // }, [surveyid]);
-
-    const onAnswer = (qno, ans) => {
-        var Answers = [...answers];
-        Answers[qno] = ans;
+    const onAnswer = (questionid, ans) => {
+        var Answers = answers;
+        Answers[questionid] = ans;
 
         setAnswers(Answers);
     }
@@ -82,27 +78,29 @@ function SurveyForm(props){
     const context = useContext(AdminContext);
 
     return (
+        !context.loggedIn && 
       <Container fluid>
        {submitted && <Redirect to='/surveys'></Redirect>}
 
         <Form ref={scrollRef} className="below-nav mx-auto questions ">
             
             <ListGroup.Item className="survey-header round-border">
-                <Form.Control size="lg"  className="survey-title" placeholder="Untitled Survey" disabled value={props.title}/>  
+                <Form.Control size="lg"  className="survey-title" placeholder="Untitled Survey" disabled value={props.title}/> 
+                <Form.Group  controlid='survey'>
+                <Form.Control  type='text' placeholder="Your name" value={name}  onChange={ev => setName(ev.target.value)} isInvalid={errorMessage !== ''}/>
+            </Form.Group> 
             </ListGroup.Item>
             
-            <Form.Group  controlid='survey'>
-                <Form.Control  type='text' placeholder="Your name" value={name}  onChange={ev => setName(ev.target.value)} isInvalid={errorMessage !== ''}/>
-            </Form.Group>
+            
 
             {
                 questions.map( question => 
                 <Form.Group className="question round-border" >
                     {
                         question.options ? 
-                        <MCQuestion question={question}/>
+                        <MCQuestion question={question} onAnswer={onAnswer}/>
                         :
-                        <OpenEndedQuestion question={question}/>
+                        <OpenEndedQuestion question={question} />
                     }
                 </Form.Group>  
                 )
