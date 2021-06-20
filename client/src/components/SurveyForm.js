@@ -22,6 +22,7 @@ function SurveyForm(props){
     const scrollTop = () => scrollRef.current.scrollIntoView() ;
 
     const checkAnswersOnRequested = () => {
+        console.log(answers);
         return questions.filter( q => {
             if(q.min > 0 && !(q.id in answers)) return true;
             
@@ -100,7 +101,7 @@ function SurveyForm(props){
                         question.options ? 
                         <MCQuestion question={question} onAnswer={onAnswer}/>
                         :
-                        <OpenEndedQuestion question={question} />
+                        <OpenEndedQuestion question={question} onAnswer={onAnswer}/>
                     }
                 </Form.Group>  
                 )
