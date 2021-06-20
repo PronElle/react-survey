@@ -3,6 +3,7 @@ import { Carousel } from 'react-bootstrap';
 import { Redirect} from 'react-router-dom';
 import SurveyForm from './SurveyForm';
 import API from '../api/api';
+import { iconSad } from '../icons'; 
 
 export default function AnswersSlideShow(props) {
     const { surveyid } = props;
@@ -22,6 +23,7 @@ export default function AnswersSlideShow(props) {
 
   
     return (
+      replies.length ? 
       <Carousel interval={50000} activeIndex={index} onSelect={handleSelect}>
         {
             replies && replies.map( r =>  
@@ -31,15 +33,19 @@ export default function AnswersSlideShow(props) {
                            questions={props.questions}
                            setQuestions={props.setQuestions}
                            disabled={true}/>
-                 <Carousel.Caption>
-                  <h3>First slide label</h3>
-                  <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
-                </Carousel.Caption>
             </Carousel.Item>
             )
                 
         }
       </Carousel>
+      :
+      <div className="text-center below-nav">
+        <div className="text-center below-nav-center">{iconSad}</div>
+        
+        <h1>
+          Looks like nobody answered yet
+        </h1>
+      </div>
     );
   }
   

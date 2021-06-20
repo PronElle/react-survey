@@ -95,8 +95,7 @@ function SurveyForm(props){
             </Form.Group> 
             </ListGroup.Item>
             
-            
-
+        
             {
                 questions.map( question => 
                 <Form.Group className="question round-border" >
@@ -104,7 +103,7 @@ function SurveyForm(props){
                         question.options ? 
                         <MCQuestion answers={() => ansAt(question.id)} question={question} onAnswer={onAnswer} disabled={props.disabled}/>
                         :
-                        <OpenEndedQuestion answers={props.answers} question={question} onAnswer={onAnswer} disabled={props.disabled}/>
+                        <OpenEndedQuestion answers={() => ansAt(question.id)} question={question} onAnswer={onAnswer} disabled={props.disabled}/>
                     }
                 </Form.Group>  
                 )

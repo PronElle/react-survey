@@ -125,7 +125,7 @@ app.get('/replies', isLoggedIn, (req, res) => {
 });
 
 
-app.post('/replies/:id', isLoggedIn, [
+app.post('/replies/:id', [
   check('name').isLength({'min': 1})
   // altri check 
 ], (req, res) => {
