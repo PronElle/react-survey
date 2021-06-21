@@ -56,10 +56,11 @@ function App() {
     API.createQuestions(_questions);
   }
 
-  // add  a new record
+  // add  a new Reply to the db and updates the 
+  // number of answerer for that specific survey
   const addReply = (reply) => {
      API.addReply(reply);
-    // update survey (num of peopel answering)
+    //  API.updateSurvey(reply.id);
   }
  
   /**
@@ -115,9 +116,9 @@ function App() {
                 // eslint-disable-next-line 
               const survey = surveys.find(survey => survey.id == match.params.id); 
               return !survey ? <Redirect to='/surveys'/> : 
-                     loggedIn ? <AnswersSlideShow title={survey.title} surveyid={survey.id} questions={questions} setQuestions={setQuestions}/> :
-                               <SurveyForm surveyid={survey.id} questions={questions} setQuestions={setQuestions}
-                                    title={survey.title} addReply={addReply}/> 
+                     loggedIn ? <AnswersSlideShow title={survey.title} surveyid={survey.id} questions={questions} setQuestions={setQuestions}/> 
+                                :
+                               <SurveyForm surveyid={survey.id} questions={questions} setQuestions={setQuestions} title={survey.title} addReply={addReply}/> 
             }
           }}/>
 

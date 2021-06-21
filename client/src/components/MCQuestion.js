@@ -17,11 +17,15 @@ function MCQuestion(props) {
             answerUpd.splice(answerUpd.indexOf(id), 1);
             setAnswer(answerUpd);
             props.onAnswer(question.id, answerUpd);
-        } else if (n_checked < question.max){ // if unchecked, check if max respected 
+        } 
+        
+        else if (n_checked < question.max){ // if unchecked, check if max respected 
             answerUpd.push(id);
             setAnswer(answerUpd);
             props.onAnswer(question.id, answerUpd);
-        } else if ( question.max === 1 ) {// "for better" interaction
+        } 
+        
+        else if ( question.max === 1 ) {// "for better" interaction
             answerUpd = [id];
             setAnswer(answerUpd);
             props.onAnswer(question.id, answerUpd);
@@ -29,7 +33,7 @@ function MCQuestion(props) {
     }
 
     return (
-        <div className="custom-control">
+        <Form  className="custom-control">
             <div className="d-flex justify-content-between">
                 <label>
                    <span onClick={() => deleteQuestion(question)}> {question.content} {context.loggedIn && iconDelete}</span>
@@ -37,18 +41,19 @@ function MCQuestion(props) {
                 <span>{question.min >= 1 && iconRequired}</span>
             </div>
             <hr/>
-            <Form>
-                {
-                question.options.map( ({text, id}) => 
-                        <Form.Check custom type="checkbox" 
-                                    id={id}
-                                    label={text} 
-                                    disabled={disabled}
-                                    checked={answer.includes(id)}
-                                    onChange={ev => handleCheckChange(ev.target.checked, id)} />)
-                }       
-            </Form>         
-        </div>
+            
+           
+            { Array.isArray(question.options) // handles the offset from fetch
+            && 
+            question.options.map( ({text, id}) => 
+                    <Form.Check custom type="checkbox" 
+                                id={id}
+                                label={text} 
+                                disabled={disabled}
+                                checked={answer.includes(id)}
+                                onChange={ev => handleCheckChange(ev.target.checked, id)} />)
+            }       
+        </Form>    
     );
 }
 
