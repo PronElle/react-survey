@@ -36,6 +36,11 @@ function SurveyForm(props){
     const handleSubmit = (event) => {
         event.preventDefault();
         
+        if(context.loggedIn){ // if I'm in SHOW mode
+            setSubmitted(true);
+            return;
+        }
+        
         let valid = true;
 
         // validation
@@ -67,7 +72,7 @@ function SurveyForm(props){
             .then( qs => {
             setQuestions(qs);
         })
-    }, [surveyid]);
+    }, []);
 
     const onAnswer = (questionid, ans) => {
         var Answers = answers;
@@ -90,12 +95,11 @@ function SurveyForm(props){
             
             <ListGroup.Item className="survey-header round-border">
                 <Form.Control size="lg"  className="survey-title" placeholder="Untitled Survey" disabled value={props.title}/> 
-                <Form.Group  controlid='survey'>
-                <Form.Control  type='text' placeholder="Your name" value={name}  onChange={ev => setName(ev.target.value)} isInvalid={errorMessage !== ''}/>
-            </Form.Group> 
+                    <Form.Group  controlid='survey'>
+                    <Form.Control  type='text' placeholder="Your name" value={name}  onChange={ev => setName(ev.target.value)} isInvalid={errorMessage !== ''} disabled={props.disabled}/>
+                </Form.Group> 
             </ListGroup.Item>
             
-        
             {
                 questions.map( question => 
                 <Form.Group className="question round-border" >
@@ -109,11 +113,11 @@ function SurveyForm(props){
                 )
 
             }
-            { !context.loggedIn && 
-            <Button variant="primary" className="btn-form" onClick={ev => handleSubmit(ev)}>
-                Submit
+             
+            <Button variant="primary" size="lg" className="btn-form" onClick={ev => handleSubmit(ev)}>
+              { context.loggedIn ? "Close" : "Submit"}
             </Button>
-            }  
+            
         </Form>
     </Container>
    );

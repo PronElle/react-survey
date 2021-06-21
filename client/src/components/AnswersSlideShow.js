@@ -1,12 +1,11 @@
 import React, {useState, useEffect} from 'react';
 import { Carousel } from 'react-bootstrap';
-import { Redirect} from 'react-router-dom';
 import SurveyForm from './SurveyForm';
 import API from '../api/api';
 import { iconSad } from '../icons'; 
 
 export default function AnswersSlideShow(props) {
-    const { surveyid } = props;
+    const { title, surveyid, questions, setQuestions } = props;
     const [replies, setReplies] = useState([]);
     const [index, setIndex] = useState(0);
 
@@ -14,6 +13,7 @@ export default function AnswersSlideShow(props) {
       setIndex(selectedIndex);
     };
     
+    // mount and slide
     useEffect(() => {
         API.getReplies(surveyid)
             .then( reps => {
@@ -21,31 +21,39 @@ export default function AnswersSlideShow(props) {
         })
     }, [index]);
 
+    const settings = {
+      interval: null,
+      controls: replies.length > 1,
+      activeIndex: index, 
+      onSelect: handleSelect
+    };
   
     return (
-      replies.length ? 
-      <Carousel interval={50000} activeIndex={index} onSelect={handleSelect}>
-        {
+        replies.length ? 
+        <Carousel  {...settings}>
+          {
             replies && replies.map( r =>  
-            <Carousel.Item>
-              <SurveyForm title={props.title} surveyid={props.surveyid} 
-                           name={r.name} answers={r.answers} 
-                           questions={props.questions}
-                           setQuestions={props.setQuestions}
-                           disabled={true}/>
-            </Carousel.Item>
-            )
-                
-        }
-      </Carousel>
-      :
-      <div className="text-center below-nav">
-        <div className="text-center below-nav-center">{iconSad}</div>
-        
-        <h1>
-          Looks like nobody answered yet
-        </h1>
-      </div>
+              <Carousel.Item>
+                <SurveyForm title={title} surveyid={surveyid} 
+                            name={r.name} answers={r.answers} 
+                            questions={questions}
+                            setQuestions={setQuestions}
+                            disabled={true}/>
+              </Carousel.Item>
+              )
+                  
+          }
+        </Carousel>
+        :
+        <div className="text-center below-nav">
+          <div className="text-center below-nav-center">{iconSad}</div>
+          
+          <h1>
+            Looks like nobody answered yet
+          </h1>
+        </div>
+      
+     
     );
   }
   
