@@ -18,13 +18,11 @@ function MCQuestion(props) {
             setAnswer(answerUpd);
             props.onAnswer(question.id, answerUpd);
         } 
-        
         else if (n_checked < question.max){ // if unchecked, check if max respected 
             answerUpd.push(id);
             setAnswer(answerUpd);
             props.onAnswer(question.id, answerUpd);
         } 
-        
         else if ( question.max === 1 ) {// "for better" interaction
             answerUpd = [id];
             setAnswer(answerUpd);
@@ -34,16 +32,13 @@ function MCQuestion(props) {
 
 
     return (
-        <Form  className="custom-control">
-            <div className="d-flex justify-content-between">
-                <label>
-                   <span onClick={() => deleteQuestion(question)}> {question.content} {context.loggedIn && iconDelete}</span>
-                </label>
+        <div className="custom-control">
+            <Form.Label className="d-flex justify-content-between">
+                <span onClick={() => deleteQuestion(question)}> {question.content} {context.loggedIn && iconDelete}</span>
                 <span>{question.min >= 1 && iconRequired}</span>
-            </div>
+            </Form.Label>
             <hr/>
             
-           
             {  Array.isArray(question.options) && 
             question.options.map( ({id, text}) => 
                     <Form.Check custom type="checkbox" 
@@ -53,7 +48,7 @@ function MCQuestion(props) {
                                 checked={answer.includes(id)}
                                 onChange={ev => handleCheckChange(ev.target.checked, id)} />)
             }       
-        </Form>    
+        </div>    
     );
 }
 

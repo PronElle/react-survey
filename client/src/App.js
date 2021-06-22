@@ -45,7 +45,8 @@ function App() {
         .then( survs => {
           setSurveys(survs);
           setLoading(false);
-        });
+        })
+        .catch(err => setLoading(false));
   }, [loggedIn]);
 
 

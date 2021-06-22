@@ -49,7 +49,6 @@ function AddSurveyForm(props) {
         const items = Array.from(questions);
         const [reordereItem] = items.splice(result.source.index, 1);
         items.splice(result.destination.index, 0, reordereItem);
-
         setQuestions(items);
     }
 

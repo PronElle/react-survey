@@ -33,3 +33,19 @@ function OpenEndedQuestion(props) {
 }
 
 export default OpenEndedQuestion;
+
+{/* <div className="custom-control">
+<Form.Label className="d-flex justify-content-between">
+    <span onClick={() => deleteQuestion(question)}> {question.content}{context.loggedIn && iconDelete}</span>               
+    <span>{question.min >= 1 && iconRequired}</span>
+</Form.Label>
+<hr/>
+<Form.Control as="textarea" 
+                maxLength="200"  
+                rows={3} cols={20}  
+                placeholder="your answer (max 200 words)" 
+                disabled={disabled} 
+                value = {answer}
+                onChange={ ev=> { setAnswer(ev.target.value); props.onAnswer(question.id, ev.target.value)}}
+    />      
+</div>      */}

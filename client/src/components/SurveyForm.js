@@ -17,20 +17,23 @@ function SurveyForm(props){
     const [answers, setAnswers] = useState(props.answers ? props.answers : {});
     const [errorMessage, setErrorMessage] = useState('');
     const [submitted, setSubmitted] = useState(false);
+    const [unans, setUnans] = useState([]);
 
     const scrollRef = useRef(null)
 
     const scrollTop = () => scrollRef.current.scrollIntoView() ;
 
     const checkAnswersOnRequested = () => {
-        return questions.filter( q => {
+        var unanswered = questions.filter( q => {
             if(q.min > 0 && !(q.id in answers)) return true;
             
             if (q.min > 0 && q.id in answers){
                 return answers[q.id].length < q.min && answers[q.id].length > q.max ;
             } 
             return false;
-        }).length === 0;
+        });
+        setUnans(unanswered);
+        return unanswered.length === 0;
     }
 
     const handleSubmit = (event) => {
@@ -41,9 +44,8 @@ function SurveyForm(props){
             return;
         }
         
-        let valid = true;
-
         // validation
+        let valid = true;
         if( name.trim() === ''){
             setErrorMessage('You must add your name to submit the survey');
             valid = false;    
@@ -55,16 +57,11 @@ function SurveyForm(props){
         }
 
         if(valid) {
-            const reply = {
-               name : name , 
-               survey: surveyid, 
-               answers: answers
-            }
+            const reply = { name : name, survey: surveyid, answers: answers }
             props.addReply(reply);
             setSubmitted(true);
-        } else {
+        } else 
             scrollTop();   
-        }
     }
 
     useEffect(() => {
@@ -96,14 +93,16 @@ function SurveyForm(props){
             
             <ListGroup.Item className="survey-header round-border">
                 <Form.Control size="lg"  className="survey-title" placeholder="Untitled Survey" disabled value={props.title}/> 
-                    <Form.Group  controlid='survey'>
-                    <Form.Control  type='text' placeholder="Your name" value={name}  onChange={ev => setName(ev.target.value)} isInvalid={errorMessage !== ''} disabled={props.disabled}/>
+                
+                <Form.Group  controlid='survey'>
+                    <Form.Control  type='text' placeholder="Your name" value={name}  onChange={ev => setName(ev.target.value)} isInvalid={name === '' && errorMessage !== ''} disabled={props.disabled}/>
                 </Form.Group> 
+                {errorMessage &&  <span className="small error-msg">{errorMessage}</span>}
             </ListGroup.Item>
             
             {
                 questions.map( question => 
-                <Form.Group className="question round-border" >
+                <Form.Group className={unans.includes(question) ? "question round-border invalid" : "question round-border"}>
                     {
                         question.options ? 
                         <MCQuestion answers={() => ansAt(question.id)} question={question} onAnswer={onAnswer} disabled={props.disabled}/>

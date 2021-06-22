@@ -132,3 +132,11 @@ textarea{
     filter: invert(100%);
 }
 
+
+.invalid {
+    border-color: red !important;
+}
+
+span.error-msg {
+    color: red;
+}

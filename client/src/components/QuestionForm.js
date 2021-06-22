@@ -81,7 +81,7 @@ function QuestionForm(props) {
                 <Form.Group controlid='question'>
                     <Form.Label>Question text</Form.Label>
                     <Form.Control type='text' value={content} onChange={ev => setContent(ev.target.value)}></Form.Control>
-                    <span style={{ color: 'red' }}>{errorMessage}</span>
+                    <span className="small error-msg">{errorMessage}</span>
                 </Form.Group>
 
                 { !openEnded && 
