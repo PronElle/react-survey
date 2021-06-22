@@ -35,18 +35,3 @@ exports.getSurveys = (admin) => {
         })
     });
 }
-
-
-exports.updateSurvey = (id, survey) => {
-    return new Promise((resolve, reject) => {
-       const query = 'UPDATE surveys SET answers = ? WHERE id = ?';
-       // employs param id to avoid using the new task's one (might be different)
-       db.run(query, [survey.answers + 1, id], function (err) {
-         if (err) {
-           reject(err);
-           return;
-         }
-         resolve(this.lastID);
-       });
-     });
-   }

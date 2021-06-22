@@ -93,6 +93,7 @@ app.post('/surveys', [
            .catch(error => res.status(550).json(error));
 });
 
+
 /* ------ Question server-side ----- */
 app.get('/questions', (req, res) => {
   questionDao.getQuestions(req.query.surveyid)
@@ -141,29 +142,6 @@ app.post('/replies/:id', [
 });
 
 
-app.put('/tasks/:id', [
-  check("title").isLength({ 'min': 1 }),
-  check("answers").isNumeric()
-],
-(req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-      return res.status(422).json({ errors: errors.array() });
-  }
-
-  if(!req.body.id)
-      res.status(400).end();
-  else {
-      const survey = req.body;
-      const id = req.params.id;
-
-      surveyDao.updateSurvey(id, survey)
-          .then(() => res.status(200).end())
-          .catch((err) => res.status(503).json({
-              errors: [{ 'param': 'Server', 'msg': err }]
-          }));
-  }
-});
 
 
 
