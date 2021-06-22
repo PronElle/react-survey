@@ -16,15 +16,6 @@
 }
 
 
-/* Add new survey button */
-.fixed-right-bottom {
-    right: 0;
-    bottom: 0;
-    position: absolute;
-    z-index: 1030;
-    margin: 0 1.5rem 1.5rem 0;
-    
-}
 
 /* Add new question button */
 .fixed-right-bottom-circular {
