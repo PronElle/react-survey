@@ -102,8 +102,10 @@ app.get('/questions', (req, res) => {
 })
 
 app.post('/questions', [
-  check('content').isLength({'min': 1})
-  // altri check 
+  check('content').isLength({'min': 1}),
+  check('min').isNumeric(),
+  check('max').isNumeric(),
+  check('survey').isNumeric()
 ], (req, res) => {
  const errors = validationResult(req);
  if (!errors.isEmpty()) {
@@ -127,8 +129,8 @@ app.get('/replies', isLoggedIn, (req, res) => {
 
 
 app.post('/replies/:id', [
-  check('name').isLength({'min': 1})
-  // altri check 
+  check('name').isLength({'min': 1}),
+  check('survey').isNumeric()
 ], (req, res) => {
  const errors = validationResult(req);
  if (!errors.isEmpty()) {
