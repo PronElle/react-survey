@@ -71,17 +71,6 @@ async function createSurvey(title){
   return response.ok ? null : { 'err': 'POST error' };
 }
 
-// only updates the number of people who answered
-async function updateSurvey(survey){
-    const response = await fetch('/surveys/' + survey.id, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(survey)
-    });
-    
-    return response.ok ? null : { 'err': 'PUT error' };
-}
-
 
 /** --- Question APIs ---*/
 async function getQuestions(surveyid){
@@ -141,6 +130,6 @@ async function addReply (reply){
 
 
 
-const API = { login, logout, getUserInfo, getSurveys, createSurvey, getQuestions, updateSurvey, createQuestions, addReply, getReplies };
+const API = { login, logout, getUserInfo, getSurveys, createSurvey, getQuestions, createQuestions, addReply, getReplies };
 
 export default API;

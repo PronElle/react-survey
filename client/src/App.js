@@ -60,7 +60,6 @@ function App() {
   // number of answerer for that specific survey
   const addReply = (reply) => {
      API.addReply(reply);
-    //  API.updateSurvey(reply.id);
   }
  
   /**

@@ -32,6 +32,7 @@ function MCQuestion(props) {
         }
     }
 
+
     return (
         <Form  className="custom-control">
             <div className="d-flex justify-content-between">
@@ -43,9 +44,8 @@ function MCQuestion(props) {
             <hr/>
             
            
-            { Array.isArray(question.options) // handles the offset from fetch
-            && 
-            question.options.map( ({text, id}) => 
+            {  Array.isArray(question.options) && 
+            question.options.map( ({id, text}) => 
                     <Form.Check custom type="checkbox" 
                                 id={id}
                                 label={text} 
