@@ -25,11 +25,11 @@ function SurveyForm(props){
 
     const checkAnswersOnRequested = () => {
         var unanswered = questions.filter( q => {
-            if(q.min > 0 && !(q.id in answers)) return true;
+            if(q.min > 0 && !answers[q.id]) return true;
+
+            if (q.min > 0 && q.id in answers)
+                return answers[q.id].length < q.min || (q.options && answers[q.id].length > q.max) ;
             
-            if (q.min > 0 && q.id in answers){
-                return answers[q.id].length < q.min && answers[q.id].length > q.max ;
-            } 
             return false;
         });
         setUnans(unanswered);
@@ -73,8 +73,10 @@ function SurveyForm(props){
 
     const onAnswer = (questionid, ans) => {
         var Answers = answers;
-        Answers[questionid] = ans;
-
+        if(ans.length !== 0)
+            Answers[questionid] = ans;
+        else // only storing given answers
+            delete Answers[questionid];
         setAnswers(Answers);
     }
 
