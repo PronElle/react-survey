@@ -71,14 +71,14 @@ app.use(passport.session());
 
 /* ------ Survey server-side ------ */
 
-app.get('/surveys', (req, res) => {
+app.get('/api/surveys', (req, res) => {
   surveyDao.getSurveys(req.user?.id)
            .then(surveys => res.json(surveys))
            .catch(err => res.status(500).json(err));
 })
 
 
-app.post('/surveys', [
+app.post('/api/surveys', [
    check('title').isLength({'min': 1}) 
  ], (req, res) => {
   const errors = validationResult(req);
@@ -95,17 +95,16 @@ app.post('/surveys', [
 
 
 /* ------ Question server-side ----- */
-app.get('/questions', (req, res) => {
+app.get('/api/questions', (req, res) => {
   questionDao.getQuestions(req.query.surveyid)
            .then(questions => res.json(questions))
            .catch(err => res.status(500).json(err));
 })
 
-app.post('/questions', [
+app.post('/api/questions', [
   check('content').isLength({'min': 1}),
   check('min').isNumeric(),
-  check('max').isNumeric(),
-  check('survey').isNumeric()
+  check('max').isNumeric()
 ], (req, res) => {
  const errors = validationResult(req);
  if (!errors.isEmpty()) {
@@ -121,14 +120,14 @@ app.post('/questions', [
 
 
 /* --- Reply server-side ---- */
-app.get('/replies', isLoggedIn, (req, res) => {
+app.get('/api/replies', isLoggedIn, (req, res) => {
   replyDao.getReplies(req.query.surveyid)
            .then(replies => res.json(replies))
            .catch(err => res.status(500).json(err));
 });
 
 
-app.post('/replies/:id', [
+app.post('/api/replies/:id', [
   check('name').isLength({'min': 1}),
   check('survey').isNumeric()
 ], (req, res) => {
@@ -150,7 +149,7 @@ app.post('/replies/:id', [
 /* --- Login server-side ---- */
 
 // login
-app.post('/sessions', function(req, res, next) {
+app.post('/api/sessions', function(req, res, next) {
   passport.authenticate('local', (err, admin, info) => {
     if (err)
       return next(err);
@@ -172,7 +171,7 @@ app.post('/sessions', function(req, res, next) {
 
 
 // GET /sessions/current
-app.get('/sessions/current', (req, res) => {
+app.get('/api/sessions/current', (req, res) => {
   if(req.isAuthenticated()) {
     res.status(200).json(req.user);}
   else
@@ -182,7 +181,7 @@ app.get('/sessions/current', (req, res) => {
 
 // DELETE /sessions/current 
 // logout
-app.delete('/sessions/current', (req, res) => {
+app.delete('/api/sessions/current', (req, res) => {
   req.logout();
   res.end();
 });

@@ -3,10 +3,12 @@ import SurveyModel from '../models/SurveyModel';
 import QuestionModel from '../models/QuestionModel';
 import ReplyModel from '../models/ReplyModel';
 
+const BASEURL = '/api';
+
 /** --- Auth APIs --- */
 
 async function login(credentials) {
-  let response = await fetch('/sessions', {
+  let response = await fetch(BASEURL + '/sessions', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -30,11 +32,11 @@ async function login(credentials) {
 }
   
 async function logout() {
-    await fetch('/sessions/current', { method: 'DELETE' });
+    await fetch(BASEURL + '/sessions/current', { method: 'DELETE' });
 }
   
 async function getUserInfo() {
-  const response = await fetch('/sessions/current');
+  const response = await fetch(BASEURL + '/sessions/current');
   const userInfo = await response.json();
   
   if (response.ok) {
@@ -46,7 +48,7 @@ async function getUserInfo() {
 
 /** --- Survey APIs --- */
 async function getSurveys(){
-   const url = '/surveys';
+   const url = BASEURL + '/surveys';
    const response = await fetch(url);
    const surveysJson = await response.json();
 
@@ -62,7 +64,7 @@ async function createSurvey(title){
     answers: 0,
   }
 
-  const response = await fetch('/surveys', {
+  const response = await fetch(BASEURL + '/surveys', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(survey)
@@ -74,7 +76,7 @@ async function createSurvey(title){
 
 /** --- Question APIs ---*/
 async function getQuestions(surveyid){
-  const url = '/questions?surveyid=' + surveyid;
+  const url = BASEURL + '/questions?surveyid=' + surveyid;
   
   const response = await fetch(url);
   const questionsJson = await response.json();
@@ -89,7 +91,7 @@ async function getQuestions(surveyid){
 async function createQuestions(questions){
    for(let q of questions){
     q.options = JSON.stringify(q.options);
-    const response = await fetch('/questions', {
+    const response = await fetch(BASEURL + '/questions', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(q)     
@@ -105,7 +107,7 @@ async function createQuestions(questions){
 /**--- Reply APIs --- */
 
 async function getReplies(surveyid){
-  const url = '/replies?surveyid=' + surveyid;
+  const url = BASEURL + '/replies?surveyid=' + surveyid;
   
   const response = await fetch(url);
   const repliesJson = await response.json();
@@ -119,7 +121,7 @@ async function getReplies(surveyid){
 
 async function addReply (reply){
   reply.answers = JSON.stringify(reply.answers);
-  const response = await fetch('/replies/' + reply.survey, {
+  const response = await fetch(BASEURL + '/replies/' + reply.survey, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(reply)
