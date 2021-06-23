@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState, useContext} from 'react';
 import { AdminContext } from '../context/AdminContext';
-import { Form, Row, Button, ListGroup, Container, Alert } from 'react-bootstrap';
+import { Form, Row, Button, ListGroup, Container } from 'react-bootstrap';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import { Redirect } from 'react-router-dom';
 
@@ -76,7 +76,9 @@ function AddSurveyForm(props) {
                                     { provided =>
                                     <ListGroup.Item className="question round-border" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                                         {
-                                            q.options ? <MCQuestion question={q} deleteQuestion={deleteQuestion} disabled={true}/> : <OpenEndedQuestion question={q} deleteQuestion={deleteQuestion} disabled={true}/>
+                                            q.options ? <MCQuestion question={q} deleteQuestion={deleteQuestion} disabled addMode/> 
+                                                         : 
+                                                        <OpenEndedQuestion question={q} deleteQuestion={deleteQuestion} disabled addMode/>
                                         }
                                     </ListGroup.Item>                    
                                     }
@@ -88,8 +90,8 @@ function AddSurveyForm(props) {
                     </Droppable>
                 </DragDropContext>
             </Row> 
-            {showSubmit && <Button variant="primary" size="lg"  className="d-flex mx-auto" onClick={ev => handleSubmit(ev)}>Submit</Button>}
            
+            {showSubmit && <Button variant="primary" size="lg"  className="d-flex mx-auto" onClick={ev => handleSubmit(ev)}>Submit</Button>}
             {questionModalOpen && <QuestionForm addQuestion={addQuestion} modalOpen={questionModalOpen} toggleModal={toggleQuestionModal}/>}
             <Button variant="primary" size="lg" className="fixed-right-bottom-circular" onClick={() => toggleQuestionModal()}>&#43;</Button>
         </Container>

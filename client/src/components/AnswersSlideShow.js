@@ -17,9 +17,9 @@ export default function AnswersSlideShow(props) {
     useEffect(() => {
         API.getReplies(surveyid)
             .then( reps => {
-            setReplies(reps); 
+            setReplies(reps);
         })
-    }, [index]);
+    }, [index, surveyid]);
 
     const settings = {
       interval: null,
@@ -32,13 +32,13 @@ export default function AnswersSlideShow(props) {
         replies.length ? 
         <Carousel  {...settings}>
           {
-            replies && replies.map( r =>  
+            replies.map( r =>  
               <Carousel.Item>
                 <SurveyForm title={title} surveyid={surveyid} 
                             name={r.name} answers={r.answers} 
                             questions={questions}
                             setQuestions={setQuestions}
-                            disabled={true}/>
+                            disabled/>
               </Carousel.Item>
               )
                   

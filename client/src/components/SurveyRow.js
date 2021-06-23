@@ -16,7 +16,7 @@ function SurveyRow(props) {
           </div>
 
            <div>
-               {context?.loggedIn ?
+               {context.loggedIn ?
                 <> 
                     <small>Answers: {survey.answers} </small>
                     <Link to = {'/survey/' + survey.id}><span> {iconShow}</span></Link>  

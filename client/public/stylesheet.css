@@ -129,3 +129,8 @@ textarea{
 span.error-msg {
     color: red;
 }
+
+.tooltip {
+    width: 100px;
+}
+

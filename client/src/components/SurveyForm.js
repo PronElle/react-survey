@@ -6,17 +6,17 @@ import { Redirect } from 'react-router-dom';
 import { AdminContext } from '../context/AdminContext';
 import MCQuestion from './MCQuestion';
 import OpenEndedQuestion from './OpenEndedQuestion';
-import SurveyHeader from './SurveyHeader';
+ import SurveyHeader from './SurveyHeader';
 
 import API from '../api/api';
 
-// props dovrebbe contenere una modalità (write, read)
 function SurveyForm(props){
     const { surveyid, questions, setQuestions } = props;
     const [name, setName]  = useState(props.name ? props.name : ''); // name of user
     const [answers, setAnswers] = useState(props.answers ? props.answers : {});
     const [errorMessage, setErrorMessage] = useState('');
     const [submitted, setSubmitted] = useState(false);
+    const [loading, setLoading ] = useState(true);
     const [unans, setUnans] = useState([]);
 
     const scrollRef = useRef(null)
@@ -63,13 +63,15 @@ function SurveyForm(props){
         } else 
             scrollTop();   
     }
-
+    
     useEffect(() => {
         API.getQuestions(surveyid)
             .then( qs => {
             setQuestions(qs);
+            setLoading(false);
         })
-    }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [surveyid]);
 
     const onAnswer = (questionid, ans) => {
         var Answers = answers;
@@ -91,7 +93,7 @@ function SurveyForm(props){
        {submitted && <Redirect to='/surveys'></Redirect>}
 
         <Form ref={scrollRef} className="below-nav mx-auto questions ">
-            {/* <SurveyHeader title={props.title} name={name} setName={setName} disabled={true}/> */}
+            {/* <SurveyHeader title={props.title} name={name} setName={setName} disabled={props.disabled} fillMode/> */}
             
             <ListGroup.Item className="survey-header round-border">
                 <Form.Control size="lg"  className="survey-title" placeholder="Untitled Survey" disabled value={props.title}/> 
@@ -103,7 +105,7 @@ function SurveyForm(props){
             </ListGroup.Item>
             
             {
-                questions.map( question => 
+                !loading && questions.map( question => 
                 <Form.Group className={unans.includes(question) ? "question round-border invalid" : "question round-border"}>
                     {
                         question.options ? 

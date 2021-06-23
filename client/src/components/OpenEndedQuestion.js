@@ -5,7 +5,7 @@ import { AdminContext } from '../context/AdminContext';
 
 
 function OpenEndedQuestion(props) {
-    let { question, deleteQuestion, disabled } = props;
+    let { question, deleteQuestion, disabled, addMode } = props;
     let [answer, setAnswer] = useState(props.answers ? props.answers : '');
     const context = useContext(AdminContext);
 
@@ -13,7 +13,7 @@ function OpenEndedQuestion(props) {
         <div className="custom-control">
             <div className="d-flex justify-content-between">
                 <label>{question.content}
-                   <span onClick={() => deleteQuestion(question)}> {context.loggedIn && iconDelete}</span>
+                   <span onClick={() => deleteQuestion(question)}> {context.loggedIn && addMode && iconDelete}</span>
                 </label>
                 <span>{question.min >= 1 && iconRequired}</span>
             </div>

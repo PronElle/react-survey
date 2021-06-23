@@ -1,11 +1,11 @@
 import React, {useState, useContext} from 'react'
-import { Form } from 'react-bootstrap';
-import { iconDelete, iconRequired } from '../icons';
+import { Form, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { iconDelete, iconInfo } from '../icons';
 
 import { AdminContext } from '../context/AdminContext';
 
 function MCQuestion(props) {
-    let { question, deleteQuestion, disabled } = props;
+    let { question, deleteQuestion, disabled, addMode } = props;
     let [answer, setAnswer] = useState(props.answers ? props.answers : []);
     const context = useContext(AdminContext);
 
@@ -30,12 +30,18 @@ function MCQuestion(props) {
         }
     }
 
+    const  MinMaxTooltip = (question) =>  (
+            <Tooltip  id="min-max-tooltip" {...props}>
+                min: {question.min} max: {question.max}
+            </Tooltip>
+    );
+    
 
     return (
         <div className="custom-control">
             <Form.Label className="d-flex justify-content-between">
-                <span onClick={() => deleteQuestion(question)}> {question.content} {context.loggedIn && iconDelete}</span>
-                <span>{question.min >= 1 && iconRequired}</span>
+                <span onClick={() => deleteQuestion(question)}> {question.content} {context.loggedIn && addMode && iconDelete}</span>
+                <OverlayTrigger placement="right" overlay={MinMaxTooltip(question)}>{iconInfo}</OverlayTrigger>
             </Form.Label>
             <hr/>
             
