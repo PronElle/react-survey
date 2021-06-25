@@ -70,7 +70,11 @@ async function createSurvey(title){
       body: JSON.stringify(survey)
   });  
 
-  return response.ok ? null : { 'err': 'POST error' };
+  if(response.ok){
+    const surveyid = await response.json();
+    return surveyid;
+  }
+  return { 'err': 'POST error' };
 }
 
 
@@ -88,20 +92,19 @@ async function getQuestions(surveyid){
 }
 
 
-async function createQuestions(questions){
-   for(let q of questions){
+async function createQuestions(questions, surveyid){
+  questions.forEach( q => {
     q.options = JSON.stringify(q.options);
-    const response = await fetch(BASEURL + '/questions', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(q)     
-     });
-     
-     if (! response.ok)
-        return {'err': 'PUT error'};
-   }
-
-   return null;
+    q.survey = surveyid;
+  });
+ 
+  const response = await fetch(BASEURL + '/questions', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(questions)     
+  });
+    
+  return response.ok ? null : {'err': 'PUT error'};
 }
 
 /**--- Reply APIs --- */

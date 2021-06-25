@@ -6,7 +6,7 @@ import { Redirect } from 'react-router-dom';
 import { AdminContext } from '../context/AdminContext';
 import MCQuestion from './MCQuestion';
 import OpenEndedQuestion from './OpenEndedQuestion';
- import SurveyHeader from './SurveyHeader';
+//  import SurveyHeader from './SurveyHeader';
 
 import API from '../api/api';
 
@@ -46,14 +46,15 @@ function SurveyForm(props){
         
         // validation
         let valid = true;
-        if( name.trim() === ''){
-            setErrorMessage('You must add your name to submit the survey');
-            valid = false;    
-        }
 
         if(!checkAnswersOnRequested()){
             setErrorMessage('mandatory questions must be answered to submit the survey');
             valid = false;
+        }
+
+        if( name.trim() === ''){
+            setErrorMessage('You must add your name to submit the survey');
+            valid = false;    
         }
 
         if(valid) {
@@ -77,7 +78,7 @@ function SurveyForm(props){
         var Answers = answers;
         if(ans.length !== 0)
             Answers[questionid] = ans;
-        else // only storing given answers
+        else // only storing ACTUALLY given answers
             delete Answers[questionid];
         setAnswers(Answers);
     }
@@ -115,13 +116,11 @@ function SurveyForm(props){
                     }
                 </Form.Group>  
                 )
-
             }
              
             <Button variant="primary" size="lg" className="btn-form" onClick={ev => handleSubmit(ev)}>
               { context.loggedIn ? "Close" : "Submit"}
             </Button>
-            
         </Form>
     </Container>
    );

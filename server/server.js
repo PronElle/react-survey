@@ -89,7 +89,7 @@ app.post('/api/surveys', [
   const survey = req.body;
   survey['admin'] = req.user.id;
   surveyDao.createSurvey(survey)
-           .then(() => res.status(250).end())
+           .then(surveyid => res.status(250).json(surveyid))
            .catch(error => res.status(550).json(error));
 });
 
@@ -101,18 +101,9 @@ app.get('/api/questions', (req, res) => {
            .catch(err => res.status(500).json(err));
 })
 
-app.post('/api/questions', [
-  check('content').isLength({'min': 1}),
-  check('min').isNumeric(),
-  check('max').isNumeric()
-], (req, res) => {
- const errors = validationResult(req);
- if (!errors.isEmpty()) {
-     return res.status(422).json({ errors: errors.array() });
- }
-
- const question = req.body;
- questionDao.createQuestion(question)
+app.post('/api/questions', isLoggedIn, (req, res) => {
+ const questions = req.body;
+ questionDao.createQuestions(questions)
           .then(() => res.status(250).end())
           .catch(error => res.status(550).json(error));
 });

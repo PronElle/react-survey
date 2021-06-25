@@ -51,10 +51,14 @@ function App() {
 
 
   // add new Survey (and its questions)
-  const addSurvey = (title, _questions) => {
-    API.createSurvey(title)
-       .then(() => API.getSurveys().then(survs => setSurveys(survs)));
-    API.createQuestions(_questions);
+  const addSurvey = async (title, _questions) => {
+    try {
+      const surveyid = await API.createSurvey(title);
+      API.createQuestions(_questions, surveyid);
+      API.getSurveys().then(survs => setSurveys(survs));
+    } catch(err){
+      setMessage(err);
+    }
   }
 
   // add  a new Reply to the db and updates the 

@@ -13,8 +13,9 @@ exports.createSurvey = (survey) => {
         db.run(query, [survey.title, survey.answers, survey.admin],  function (err) {
             if(err)
                 reject(err);
-            else
+            else {
                 resolve(this.lastID);
+            }
         });
     })
 }
