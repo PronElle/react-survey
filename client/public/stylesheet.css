@@ -69,6 +69,7 @@ h1{
 
 .form-row {
     padding-left: 5px;
+    padding-right: 5px;
 }
 
 .survey-title{ 
@@ -92,6 +93,7 @@ h1{
     padding: .5em .8em .5em .5em;
     margin-top: 15px !important;
     margin-bottom: 15px !important;
+    word-break: break-all;
 }
 
 

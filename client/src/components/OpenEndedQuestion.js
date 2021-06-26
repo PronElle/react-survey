@@ -30,7 +30,7 @@ function OpenEndedQuestion(props) {
             <Form.Control as="textarea" 
                 maxLength="200"  
                 rows={3} cols={20}  
-                placeholder="your answer (max 200 words)" 
+                placeholder="your answer (max 200 characters)" 
                 disabled={disabled} 
                 value = {answer}
                 onChange={ ev=> { setAnswer(ev.target.value); props.onAnswer(question.id, ev.target.value.trimStart())}}
