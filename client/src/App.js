@@ -122,7 +122,7 @@ function App() {
               return !survey ? <Redirect to='/surveys'/> : 
                      loggedIn ? <AnswersSlideShow title={survey.title} surveyid={survey.id} questions={questions} setQuestions={setQuestions}/> 
                                 :
-                               <SurveyForm surveyid={survey.id} questions={questions} setQuestions={setQuestions} title={survey.title} addReply={addReply}/> 
+                               <SurveyForm surveyid={survey.id} questions={questions} setQuestions={setQuestions} title={survey.title} addReply={addReply} showTooltip/> 
             }
           }}/>
 

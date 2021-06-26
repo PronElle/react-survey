@@ -16,7 +16,6 @@
 }
 
 
-
 /* Add new question button */
 .fixed-right-bottom-circular {
     right: 0;
@@ -32,7 +31,7 @@ span{
 }
 
 .btn-form {
-    margin: 0  1rem 1rem 0;
+    margin: 0  1rem 3rem 0;  /*leave some margin from the button*/
 }
 
 /* login form group */
@@ -68,6 +67,10 @@ h1{
     width: 60%;
 }
 
+.form-row {
+    padding-left: 5px;
+}
+
 .survey-title{ 
   font-size: 30px;
   width: 600px;
@@ -87,19 +90,19 @@ h1{
 .question {
     border: solid 1px #d0d0d0  !important;
     padding: .5em .8em .5em .5em;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin-top: 15px !important;
+    margin-bottom: 15px !important;
 }
+
 
 .questions {
   width: 640px;
-  margin-top: 10px;
-
 }
 
 .round-border{
   border-radius: 12px !important;
 }
+
 
 /* avoid resizing text area in open-ended 
 questions */
@@ -112,7 +115,6 @@ textarea{
     border-color: #cccccc;
     -webkit-box-shadow: none;
     box-shadow: none !important;
-
 }
 
 /* slideshow arrows */
@@ -130,7 +132,7 @@ span.error-msg {
     color: red;
 }
 
-.tooltip {
-    width: 100px;
-}
+
+
+
 

@@ -110,7 +110,7 @@ function SurveyForm(props){
                 <Form.Group className={unans.includes(question) ? "question round-border invalid" : "question round-border"}>
                     {
                         question.options ? 
-                        <MCQuestion answers={() => ansAt(question.id)} question={question} onAnswer={onAnswer} disabled={props.disabled}/>
+                        <MCQuestion answers={() => ansAt(question.id)} question={question} onAnswer={onAnswer} disabled={props.disabled} showTooltip={props.showTooltip}/>
                         :
                         <OpenEndedQuestion answers={() => ansAt(question.id)} question={question} onAnswer={onAnswer} disabled={props.disabled}/>
                     }

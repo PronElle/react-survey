@@ -1,6 +1,6 @@
 import React, {useState, useContext} from 'react'
-import { Form, OverlayTrigger, Tooltip } from 'react-bootstrap';
-import { iconDelete, iconInfo } from '../icons';
+import { Form,  Badge } from 'react-bootstrap';
+import { iconDelete } from '../icons';
 
 import { AdminContext } from '../context/AdminContext';
 
@@ -30,23 +30,30 @@ function MCQuestion(props) {
         }
     }
 
-    const  MinMaxTooltip = (question) =>  (
-            <Tooltip  id="min-max-tooltip" {...props}>
-                min: {question.min} max: {question.max}
-            </Tooltip>
+    const QuestionTitle = () => (
+        <>
+         <Form.Row>
+            {question.content}
+            <span onClick={() => deleteQuestion(question)}> {context.loggedIn && addMode && iconDelete}</span>
+         </Form.Row>
+         
+          <div> 
+            <Badge pill variant="primary">min: {question.min}</Badge>
+            <Badge pill style={{'background-color': 'orange'}}>max: {question.max}</Badge>
+          </div>
+        </>
     );
-    
 
     return (
-        <div className="custom-control">
-            <Form.Label className="d-flex justify-content-between">
-                <span onClick={() => deleteQuestion(question)}> {question.content} {context.loggedIn && addMode && iconDelete}</span>
-                <OverlayTrigger placement="right" overlay={MinMaxTooltip(question)}>{iconInfo}</OverlayTrigger>
+        <div className="custom-control my-2">
+            <Form.Label className="d-flex justify-content-between">     
+               <QuestionTitle/>
             </Form.Label>
+            
             <hr/>
             
             {  Array.isArray(question.options) && 
-            question.options.map( ({id, text}) => 
+               question.options.map( ({id, text}) => 
                     <Form.Check custom type="checkbox" 
                                 id={id}
                                 label={text} 

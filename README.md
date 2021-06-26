@@ -72,5 +72,7 @@ Only stores the survey and the questions in the db when the creation process is 
 
 ## Users Credentials
 
-- username, password (plus any other requested info)
-- username, password (plus any other requested info)
+| Username                | Passoword | Surveys |
+|-------------------------|-----------|---------|
+| john.doe@polito.it      | password  |         |
+| tony.stark@starkcorp.us | password  |         |
