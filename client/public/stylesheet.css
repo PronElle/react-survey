@@ -54,10 +54,13 @@ span{
     padding-right: 10px;
 }
 
+a, a:active, a:focus {
+    outline: none; /* removing dotted border around links*/
+ }
+
 h1{
     padding-left: 20px;
 }
-
 
 
 /* --- survey ---*/
