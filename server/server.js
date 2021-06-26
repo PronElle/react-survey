@@ -7,12 +7,13 @@ const {check, validationResult} = require('express-validator'); // validation mi
  /* --- Authentication related imports ---- */
  const passport = require('passport');
  const passportLocal = require('passport-local');
- const adminDao = require('./dao/admin_dao');
  const session = require('express-session'); // session middleware
 
-/* --- Survey stuff --- */
+/* --- DAOs  --- */
+const adminDao = require('./dao/admin_dao');
 const surveyDao = require('./dao/survey_dao');
 const questionDao = require('./dao/question_dao');
+const replyDao = require('./dao/reply_dao');
 
 // init express
 const port = 3001;
@@ -68,16 +69,16 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 
-/* ------ Survey APIs ------ */
+/* ------ Survey server-side ------ */
 
-app.get('/surveys', (req, res) => {
+app.get('/api/surveys', (req, res) => {
   surveyDao.getSurveys(req.user?.id)
            .then(surveys => res.json(surveys))
            .catch(err => res.status(500).json(err));
 })
 
 
-app.post('/surveys', [
+app.post('/api/surveys', [
    check('title').isLength({'min': 1}) 
  ], (req, res) => {
   const errors = validationResult(req);
@@ -88,39 +89,58 @@ app.post('/surveys', [
   const survey = req.body;
   survey['admin'] = req.user.id;
   surveyDao.createSurvey(survey)
-           .then(() => res.status(250).end())
+           .then(surveyid => res.status(250).json(surveyid))
            .catch(error => res.status(550).json(error));
- });
+});
 
-/* ------ Question APIs ----- */
-app.get('/questions', (req, res) => {
+
+/* ------ Question server-side ----- */
+app.get('/api/questions', (req, res) => {
   questionDao.getQuestions(req.query.surveyid)
            .then(questions => res.json(questions))
            .catch(err => res.status(500).json(err));
 })
 
-app.post('/questions', [
-  check('content').isLength({'min': 1})
-  // altri check 
+app.post('/api/questions', isLoggedIn, (req, res) => {
+ const questions = req.body;
+ questionDao.createQuestions(questions)
+          .then(() => res.status(250).end())
+          .catch(error => res.status(550).json(error));
+});
+
+
+
+/* --- Reply server-side ---- */
+app.get('/api/replies', isLoggedIn, (req, res) => {
+  replyDao.getReplies(req.query.surveyid)
+           .then(replies => res.json(replies))
+           .catch(err => res.status(500).json(err));
+});
+
+
+app.post('/api/replies/:id', [
+  check('name').isLength({'min': 1}),
+  check('survey').isNumeric()
 ], (req, res) => {
  const errors = validationResult(req);
  if (!errors.isEmpty()) {
      return res.status(422).json({ errors: errors.array() });
  }
 
- const question = req.body;
- questionDao.createQuestion(question)
+ const reply = req.body;
+ replyDao.createReply(reply)
           .then(() => res.status(250).end())
           .catch(error => res.status(550).json(error));
 });
 
-/* --- Record APIs ---- */
 
 
-/* --- Login APIs ---- */
+
+
+/* --- Login server-side ---- */
 
 // login
-app.post('/sessions', function(req, res, next) {
+app.post('/api/sessions', function(req, res, next) {
   passport.authenticate('local', (err, admin, info) => {
     if (err)
       return next(err);
@@ -142,7 +162,7 @@ app.post('/sessions', function(req, res, next) {
 
 
 // GET /sessions/current
-app.get('/sessions/current', (req, res) => {
+app.get('/api/sessions/current', (req, res) => {
   if(req.isAuthenticated()) {
     res.status(200).json(req.user);}
   else
@@ -152,7 +172,7 @@ app.get('/sessions/current', (req, res) => {
 
 // DELETE /sessions/current 
 // logout
-app.delete('/sessions/current', (req, res) => {
+app.delete('/api/sessions/current', (req, res) => {
   req.logout();
   res.end();
 });

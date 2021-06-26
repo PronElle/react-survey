@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { Navbar, Button, Col, Form, FormControl } from 'react-bootstrap';
 import Nav from 'react-bootstrap/Nav';
-import { AdminContext } from '../AdminContext';
+import { AdminContext } from '../context/AdminContext';
 import { iconEdit, iconPersonCircle } from '../icons';
 import { Link } from 'react-router-dom';
 

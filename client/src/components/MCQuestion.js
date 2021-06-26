@@ -1,52 +1,67 @@
 import React, {useState, useContext} from 'react'
-import { Form } from 'react-bootstrap';
-import { iconDelete, iconRequired } from '../icons';
+import { Form,  Badge } from 'react-bootstrap';
+import { iconDelete } from '../icons';
 
-import { AdminContext } from '../AdminContext';
+import { AdminContext } from '../context/AdminContext';
 
 function MCQuestion(props) {
-    let { question, deleteQuestion, disabled } = props;
-    const [answer, setAnswer] = useState(Array(question.options.length).fill(false));
+    let { question, deleteQuestion, disabled, addMode } = props;
+    let [answer, setAnswer] = useState(props.answers ? props.answers : []);
     const context = useContext(AdminContext);
 
-    const handleCheckChange = (check, index) => {
-        let n_checked = answer.filter(c => c).length;
+    const handleCheckChange = (check, id) => {
+        let n_checked = answer.length;
         let answerUpd = [...answer];
         
         if(!check){   // if checked, uncheck 
-            answerUpd[index] = false;
+            answerUpd.splice(answerUpd.indexOf(id), 1);
             setAnswer(answerUpd);
-        } else if (n_checked < question.max){ // if unchecked, check if max respected 
-            answerUpd[index] = true;
+            props.onAnswer(question.id, answerUpd);
+        } 
+        else if (n_checked < question.max){ // if unchecked, check if max respected 
+            answerUpd.push(id);
             setAnswer(answerUpd);
-        } else if ( question.max === 1 ) {// "for better" interaction
-            answerUpd = Array(answerUpd.length).fill(false);
-            answerUpd[index] = true;
+            props.onAnswer(question.id, answerUpd);
+        } 
+        else if ( question.max === 1 ) {// "for better" interaction
+            answerUpd = [id];
             setAnswer(answerUpd);
+            props.onAnswer(question.id, answerUpd);
         }
     }
 
+    const QuestionTitle = () => (
+        <>
+         <Form.Row>
+            {question.content}
+            <span onClick={() => deleteQuestion(question)}> {context.loggedIn && addMode && iconDelete}</span>
+         </Form.Row>
+         
+          <div> 
+            <Badge pill variant="primary">min: {question.min}</Badge>
+            <Badge pill style={{'background-color': 'orange'}}>max: {question.max}</Badge>
+          </div>
+        </>
+    );
+
     return (
-        <div className="custom-control">
-            <div className="d-flex justify-content-between">
-                <label>
-                   <span onClick={() => deleteQuestion(question)}> {question.content} {context.loggedIn && iconDelete}</span>
-                </label>
-                <span>{question.min >= 1 && iconRequired}</span>
-            </div>
+        <div className="custom-control my-2">
+            <Form.Label className="d-flex justify-content-between">     
+               <QuestionTitle/>
+            </Form.Label>
+            
             <hr/>
-            <Form>
-                {
-                question.options.map( ({text, id}, i) => 
-                        <Form.Check custom type="checkbox" 
-                                    id={id}
-                                    label={text} 
-                                    disabled={disabled}
-                                    checked={answer[i]}
-                                    onChange={ev => handleCheckChange(ev.target.checked, i)} />)
-                }       
-            </Form>         
-        </div>
+            
+            {  Array.isArray(question.options) && 
+               question.options.map( ({id, text}) => 
+                    <Form.Check custom type="checkbox" 
+                                id={id}
+                                label={text} 
+                                disabled={disabled}
+                                checked={answer.includes(id)}
+                                onChange={ev => handleCheckChange(ev.target.checked, id)} />)
+            }       
+        </div>    
     );
 }
 

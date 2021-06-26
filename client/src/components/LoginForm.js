@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { Form, Button, Alert, Card, Row, Col, InputGroup } from 'react-bootstrap';
-import { AdminContext } from '../AdminContext';
+import { AdminContext } from '../context/AdminContext';
 import { iconLock, iconPerson } from '../icons';
 
 function LoginForm(props) {

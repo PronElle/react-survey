@@ -3,116 +3,124 @@ import {useContext, useState, useRef, useEffect} from 'react';
 import { Form, Button, Container, ListGroup} from 'react-bootstrap';
 import { Redirect } from 'react-router-dom';
 
-import { AdminContext } from '../AdminContext';
+import { AdminContext } from '../context/AdminContext';
 import MCQuestion from './MCQuestion';
 import OpenEndedQuestion from './OpenEndedQuestion';
+//  import SurveyHeader from './SurveyHeader';
 
 import API from '../api/api';
 
-// props dovrebbe contenere una modalità (write, read)
 function SurveyForm(props){
-    const { surveyid, questions, setQuestions} = props;
-
-    const [name, setName]  = useState(''); // name of user
-    const [answers, setAnswers] = useState(Array(questions.length).fill([])); // se me le passano da fuori, quelle,  sennò []
-
+    const { surveyid, questions, setQuestions } = props;
+    const [name, setName]  = useState(props.name ? props.name : ''); // name of user
+    const [answers, setAnswers] = useState(props.answers ? props.answers : {});
     const [errorMessage, setErrorMessage] = useState('');
-    const [submitted, setSubmitted] = useState(false)
+    const [submitted, setSubmitted] = useState(false);
+    const [loading, setLoading ] = useState(true);
+    const [unans, setUnans] = useState([]);
 
     const scrollRef = useRef(null)
 
     const scrollTop = () => scrollRef.current.scrollIntoView() ;
 
     const checkAnswersOnRequested = () => {
-        console.log(answers)
-        return false;
-    //    return  answers.filter( ans => ans.length < q.min || ans.length > q.max).length !== 0;
+        var unanswered = questions.filter( q => {
+            if(q.min > 0 && !answers[q.id]) return true;
+
+            if (q.min > 0 && q.id in answers)
+                return answers[q.id].length < q.min || (q.options && answers[q.id].length > q.max) ;
+            
+            return false;
+        });
+        setUnans(unanswered);
+        return unanswered.length === 0;
     }
 
     const handleSubmit = (event) => {
         event.preventDefault();
         
-        let valid = true;
-
-        // validation
-        if( name.trim() === ''){
-            setErrorMessage('You must add your name to submit the survey');
-            valid = false;    
+        if(context.loggedIn){ // if I'm in SHOW mode
+            setSubmitted(true);
+            return;
         }
+        
+        // validation
+        let valid = true;
 
         if(!checkAnswersOnRequested()){
             setErrorMessage('mandatory questions must be answered to submit the survey');
             valid = false;
         }
 
-        if(valid) {
-            // const record = {
-            //    name : name , 
-            //    survey: surveyid, 
-            //    answers: answers
-            //}
-            // props.addRecord(record);
-            setSubmitted(true);
-        } else {
-            scrollTop();   
+        if( name.trim() === ''){
+            setErrorMessage('You must add your name to submit the survey');
+            valid = false;    
         }
-    }
 
+        if(valid) {
+            const reply = { name : name, survey: surveyid, answers: answers }
+            props.addReply(reply);
+            setSubmitted(true);
+        } else 
+            scrollTop();   
+    }
+    
     useEffect(() => {
         API.getQuestions(surveyid)
             .then( qs => {
             setQuestions(qs);
+            setLoading(false);
         })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [surveyid]);
 
-    // useEffect(() => {
-    //     API.getRecord(surveyid)
-    //         .then( record => {
-    //         setRecord(record);
-    //     })
-    // }, [surveyid]);
-
-    const onAnswer = (qno, ans) => {
-        var Answers = [...answers];
-        Answers[qno] = ans;
-
+    const onAnswer = (questionid, ans) => {
+        var Answers = answers;
+        if(ans.length !== 0)
+            Answers[questionid] = ans;
+        else // only storing ACTUALLY given answers
+            delete Answers[questionid];
         setAnswers(Answers);
+    }
+
+    const ansAt = (qid) => {
+        return answers[qid] || [];
     }
 
     const context = useContext(AdminContext);
 
-    return (
+    return ( 
       <Container fluid>
        {submitted && <Redirect to='/surveys'></Redirect>}
 
         <Form ref={scrollRef} className="below-nav mx-auto questions ">
+            {/* <SurveyHeader title={props.title} name={name} setName={setName} disabled={props.disabled} fillMode/> */}
             
             <ListGroup.Item className="survey-header round-border">
-                <Form.Control size="lg"  className="survey-title" placeholder="Untitled Survey" disabled value={props.title}/>  
+                <Form.Control size="lg"  className="survey-title" placeholder="Untitled Survey" disabled value={props.title}/> 
+                
+                <Form.Group  controlid='survey'>
+                    <Form.Control  type='text' placeholder="Your name" value={name}  onChange={ev => setName(ev.target.value)} isInvalid={name === '' && errorMessage !== ''} disabled={props.disabled}/>
+                </Form.Group> 
+                {errorMessage &&  <span className="small error-msg">{errorMessage}</span>}
             </ListGroup.Item>
             
-            <Form.Group  controlid='survey'>
-                <Form.Control  type='text' placeholder="Your name" value={name}  onChange={ev => setName(ev.target.value)} isInvalid={errorMessage !== ''}/>
-            </Form.Group>
-
             {
-                questions.map( question => 
-                <Form.Group className="question round-border" >
+                !loading && questions.map( question => 
+                <Form.Group className={unans.includes(question) ? "question round-border invalid" : "question round-border"}>
                     {
                         question.options ? 
-                        <MCQuestion question={question}/>
+                        <MCQuestion answers={() => ansAt(question.id)} question={question} onAnswer={onAnswer} disabled={props.disabled} showTooltip={props.showTooltip}/>
                         :
-                        <OpenEndedQuestion question={question}/>
+                        <OpenEndedQuestion answers={() => ansAt(question.id)} question={question} onAnswer={onAnswer} disabled={props.disabled}/>
                     }
                 </Form.Group>  
                 )
-
             }
-            
-            <Button variant="primary" className="btn-form" onClick={ev => handleSubmit(ev)}>
-                Submit
+             
+            <Button variant="primary" size="lg" className="btn-form" onClick={ev => handleSubmit(ev)}>
+              { context.loggedIn ? "Close" : "Submit"}
             </Button>
-               
         </Form>
     </Container>
    );

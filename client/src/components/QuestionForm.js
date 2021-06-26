@@ -17,12 +17,12 @@ function QuestionForm(props) {
     const handleSubmit = (event) => {
         event.preventDefault();
         let valid = true;
+        
         // validation
         if(content.trim() === ''){
             valid = false;
             setErrorMessage('Please, fill the question content');
-        } 
-        
+        }       
         else if (!openEnded){
             let ans_size = options.length;
             if (ans_size === 0){
@@ -50,7 +50,7 @@ function QuestionForm(props) {
     }
 
     const addOption = () => {
-        if(options.length < 10){
+        if(options.length < 10){ // specifications
             var opts = [...options, "untitled option"];
             setOptions(opts);
         }
@@ -81,7 +81,7 @@ function QuestionForm(props) {
                 <Form.Group controlid='question'>
                     <Form.Label>Question text</Form.Label>
                     <Form.Control type='text' value={content} onChange={ev => setContent(ev.target.value)}></Form.Control>
-                    <span style={{ color: 'red' }}>{errorMessage}</span>
+                    <span className="small error-msg">{errorMessage}</span>
                 </Form.Group>
 
                 { !openEnded && 

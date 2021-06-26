@@ -3,7 +3,7 @@
 const Survey = require('../entity/survey');
 const db = require('../db');
 
-const createSurveyObject = (row) => {
+const createSurveyEntity = (row) => {
     return new Survey(row.id, row.title, row.answers, row.admin);
 }
 
@@ -13,8 +13,9 @@ exports.createSurvey = (survey) => {
         db.run(query, [survey.title, survey.answers, survey.admin],  function (err) {
             if(err)
                 reject(err);
-            else
+            else {
                 resolve(this.lastID);
+            }
         });
     })
 }
@@ -29,12 +30,9 @@ exports.getSurveys = (admin) => {
             if(err) 
                reject(err)
             else {
-                let surveys = rows.map( row => createSurveyObject(row));
+                let surveys = rows.map( row => createSurveyEntity(row));
                 resolve(surveys);
             }
         })
     });
 }
-
-
-
