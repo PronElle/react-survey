@@ -1,9 +1,9 @@
 import React from 'react'
 import { useState, useContext} from 'react';
 import { AdminContext } from '../context/AdminContext';
-import { Form, Row, Button, ListGroup, Container } from 'react-bootstrap';
+import { Form, Row, Button, ListGroup } from 'react-bootstrap';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
-import { Redirect } from 'react-router-dom';
+import { Redirect, Link } from 'react-router-dom';
 
 import QuestionForm from './QuestionForm';
 import OpenEndedQuestion from './OpenEndedQuestion';
@@ -15,7 +15,6 @@ function AddSurveyForm(props) {
     const [questions, setQuestions] = useState([]);
     const [submitted, setSubmitted] = useState(false);
     const [questionModalOpen, setQuestionModalOpen] = useState(false);
-    const [showSubmit, setShowSubmit] = useState(true);
     const [errorMsg, setErrorMsg] = useState('');
     const context = useContext(AdminContext);
     
@@ -46,7 +45,6 @@ function AddSurveyForm(props) {
     }
 
     const handleDragDrop = (result) => {
-        setShowSubmit(true);
         if(!result.destination) return;
         
         const items = Array.from(questions);
@@ -55,12 +53,20 @@ function AddSurveyForm(props) {
         setQuestions(items);
     }
 
+    const AddSurveyPanel = () => (
+        <Row className="justify-content-end survey-panel round-border mx-auto">
+            <Button variant="primary" size="lg"  className="btn-panel" onClick={ev => handleSubmit(ev)}>Submit</Button>
+            <Link to='/surveys'><Button variant="secondary" size="lg" className="btn-panel">Cancel</Button></Link>
+            <Button variant="primary" size="lg" className="btn-panel" style={{'border-radius': '90%'}} onClick={() => toggleQuestionModal()}>&#43;</Button>
+        </Row>
+    );
+
     return (
-        <Container>
+        <>
             {!context.loading && !context.loggedIn && <Redirect to='/surveys'/>}
             {submitted && <Redirect to='/surveys'/>}
             <Row className="below-nav my-2 my-lg-0 mx-auto d-none d-sm-block" >
-                <DragDropContext onDragEnd={handleDragDrop} onDragStart={() => setShowSubmit(false)}>
+                <DragDropContext onDragEnd={handleDragDrop}>
                     <Droppable droppableId="droppable">
                     { provided => (  
                     <ListGroup className="mx-auto questions" {...provided.droppableProps} ref={provided.innerRef}>
@@ -90,11 +96,11 @@ function AddSurveyForm(props) {
                     </Droppable>
                 </DragDropContext>
             </Row> 
-           
-            {showSubmit && <Button variant="primary" size="lg"  className="d-flex mx-auto" onClick={ev => handleSubmit(ev)}>Submit</Button>}
+            
+            <AddSurveyPanel/>
+            
             {questionModalOpen && <QuestionForm addQuestion={addQuestion} modalOpen={questionModalOpen} toggleModal={toggleQuestionModal}/>}
-            <Button variant="primary" size="lg" className="fixed-right-bottom-circular" onClick={() => toggleQuestionModal()}>&#43;</Button>
-        </Container>
+        </>
         );
 }
 
