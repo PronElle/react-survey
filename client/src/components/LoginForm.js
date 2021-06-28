@@ -1,24 +1,24 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { Form, Button, Alert, Card, Row, Col, InputGroup } from 'react-bootstrap';
-import { AdminContext } from '../context/AdminContext';
 import { iconLock, iconPerson } from '../icons';
 
 function LoginForm(props) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  
-  const context = useContext(AdminContext);
+  const [message, setMessage ] = useState('');
+
 
   const handleSubmit = (event) => {
       event.preventDefault();
-      context.setMessage('');
+      setMessage('');
       
       if(username.trim() === '' || password.trim() === '' || password.length < 6)
-        context.setMessage('Invalid Username or Password')
+        setMessage('Invalid Username or Password')
       else{
         const credentials = { username, password };
-        props.login(credentials);
-      }    
+        props.login(credentials).catch(err => setMessage(err))
+      }
+         
   }
 
   return (
@@ -46,14 +46,13 @@ function LoginForm(props) {
             </svg>
             
             <Form>
-
               <Form.Group className='login-form' controlId='username'>
                   <InputGroup hasValidation>
                     <InputGroup.Prepend >
                       <InputGroup.Text>{iconPerson}</InputGroup.Text>
                     </InputGroup.Prepend>
 
-                    <Form.Control size="lg" type='email' value={username} placeholder="email" onChange={ev => setUsername(ev.target.value)} isInvalid={context.message !== ''}/>
+                    <Form.Control size="lg" type='email' value={username} placeholder="email" onChange={ev => setUsername(ev.target.value)} isInvalid={message !== ''}/>
                   </InputGroup>
               </Form.Group>
               
@@ -63,22 +62,14 @@ function LoginForm(props) {
                    <InputGroup.Text>{iconLock}</InputGroup.Text>
                   </InputGroup.Prepend>
                   
-                  <Form.Control size="lg" type='password' value={password} placeholder="password" onChange={ev => setPassword(ev.target.value)} isInvalid={context.message !== ''}/>
-                  
-                  {/* <Form.Control.Feedback type="invalid">
-                    {context.message}
-                  </Form.Control.Feedback> */}
+                  <Form.Control size="lg" type='password' value={password} placeholder="password" onChange={ev => setPassword(ev.target.value)} isInvalid={message !== ''}/>
                 </InputGroup>  
               </Form.Group> 
-              
-                
-              
-
             </Form>
 
             <Row>
               <Col> <Button size="lg" variant="primary" type="submit" onClick={handleSubmit}>Login</Button></Col>
-              <Col sm={9}>{context.message && <Alert  variant='danger' onClose={() => context.setMessage('')} dismissible>{context.message}</Alert> }</Col>
+              <Col sm={9}>{message && <Alert  variant='danger' onClose={() => setMessage('')} dismissible>{message}</Alert> }</Col>
             </Row>
             
           </Card.Body>

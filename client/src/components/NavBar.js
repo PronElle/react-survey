@@ -27,10 +27,7 @@ const NavBar = (props) => {
 
             <Nav  className="ml-md-auto">
                 {context.loggedIn &&
-                <>
-                    <Nav.Link>{context.message}</Nav.Link>    
                     <Nav.Link onClick = {() => {props.logout()}}>Logout</Nav.Link>      
-                </>
                 }
                 <Nav.Link>
                     { !context.loggedIn && 

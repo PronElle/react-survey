@@ -6,7 +6,6 @@ import { Redirect } from 'react-router-dom';
 import { AdminContext } from '../context/AdminContext';
 import MCQuestion from './MCQuestion';
 import OpenEndedQuestion from './OpenEndedQuestion';
-//  import SurveyHeader from './SurveyHeader';
 
 import API from '../api/api';
 
@@ -70,7 +69,7 @@ function SurveyForm(props){
             .then( qs => {
             setQuestions(qs);
             setLoading(false);
-        })
+        }).catch(err => context.handleError(err));
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [surveyid]);
 
@@ -93,7 +92,6 @@ function SurveyForm(props){
       <>
        {submitted && <Redirect to='/surveys'></Redirect>}
         <Form ref={scrollRef} className="below-nav mx-auto questions ">
-            {/* <SurveyHeader title={props.title} name={name} setName={setName} disabled={props.disabled} fillMode/> */}
             
             <ListGroup.Item className="survey-header round-border">
                 <Form.Control size="lg"  className="survey-title" placeholder="Untitled Survey" disabled value={props.title}/> 

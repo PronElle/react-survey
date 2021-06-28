@@ -5,6 +5,8 @@
 
 I tried to replicate the behavior of common websites where the very same route displays different things when you are logged vs when you're not.
 
+- Route '/login' : shows the login form
+
 - Route `/surveys`: shows the available surveys or the admin's surveys if logged in
 
 - Route `/survey/:id`: shows a survey of given id or the the replies slideshow if logged in.
@@ -17,7 +19,7 @@ I tried to replicate the behavior of common websites where the very same route d
   * Request body: credentials of the user 
   ```json
   {
-    "username": "johndoe@polito.it"
+    "username": "johndoe@polito.it",
     "password": "password"
   }
   ```
@@ -26,7 +28,7 @@ I tried to replicate the behavior of common websites where the very same route d
   ```json
   {
     "id": 1,
-    "name": "John"
+    "name": "John",
     "email": "john.doe@polito.it",
     "hashpasswd": "$2b$10$nHLAdGNSlomYH61JO6clH.kZeY7LPlNeuDY1yThhzoEipjJI3YYdW"  
   }
@@ -182,6 +184,6 @@ Only stores the survey and the questions in the db when the creation process is 
 ## Users Credentials
 
 | Username                | Passoword | Surveys             |
-|-------------------------|-----------|---------............|
-| john.doe@polito.it      | password  |  Euro2021, ..., ... |
-| tony.stark@starkcorp.us | password  |  ..., ...           |
+|-------------------------|-----------|---------------------|
+| john.doe@polito.it      | password  |  Euro2020, Modern Cinema, Is AI taking over   |
+| tony.stark@starkcorp.us | password  |  Animated Movies           |

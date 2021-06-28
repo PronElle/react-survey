@@ -9,7 +9,6 @@ import QuestionForm from './QuestionForm';
 import OpenEndedQuestion from './OpenEndedQuestion';
 import MCQuestion from './MCQuestion';
 
-
 function AddSurveyForm(props) {
     const [surveyTitle, setSurveyTitle] = useState('');
     const [questions, setQuestions] = useState([]);
@@ -76,7 +75,6 @@ function AddSurveyForm(props) {
                              <Form.Control.Feedback type="invalid" >{errorMsg}</Form.Control.Feedback>
                         </ListGroup.Item>
 
-
                         { questions.map( (q, i) => 
                                 <Draggable key={q.id} draggableId={q.id} index={i}>
                                     { provided =>
@@ -98,7 +96,6 @@ function AddSurveyForm(props) {
             </Row> 
             
             <AddSurveyPanel/>
-            
             {questionModalOpen && <QuestionForm addQuestion={addQuestion} modalOpen={questionModalOpen} toggleModal={toggleQuestionModal}/>}
         </>
         );
