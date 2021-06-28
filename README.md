@@ -17,7 +17,7 @@ I tried to replicate the behavior of common websites where the very same route d
   * Request body: credentials of the user 
   ```json
   {
-    "username": "johndoe@polito.it"
+    "username": "johndoe@polito.it",
     "password": "password"
   }
   ```
@@ -26,7 +26,7 @@ I tried to replicate the behavior of common websites where the very same route d
   ```json
   {
     "id": 1,
-    "name": "John"
+    "name": "John",
     "email": "john.doe@polito.it",
     "hashpasswd": "$2b$10$nHLAdGNSlomYH61JO6clH.kZeY7LPlNeuDY1yThhzoEipjJI3YYdW"  
   }
@@ -183,5 +183,5 @@ Only stores the survey and the questions in the db when the creation process is 
 
 | Username                | Passoword | Surveys             |
 |-------------------------|-----------|---------............|
-| john.doe@polito.it      | password  |  Euro2021, ..., ... |
-| tony.stark@starkcorp.us | password  |  ..., ...           |
+| john.doe@polito.it      | password  |  Euro2020, Modern Cinema, Is AI taking over   |
+| tony.stark@starkcorp.us | password  |  Animated Movies           |
