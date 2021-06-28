@@ -69,7 +69,7 @@ function SurveyForm(props){
             .then( qs => {
             setQuestions(qs);
             setLoading(false);
-        })
+        }).catch(err => context.handleError(err));
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [surveyid]);
 

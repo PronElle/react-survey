@@ -166,3 +166,9 @@ span.error-msg {
     margin-bottom: -4rem;
     width: 640px;
 }
+
+.toast {
+    position: absolute;
+    top: 80px;
+    right: 15px;
+}

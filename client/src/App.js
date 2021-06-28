@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { Container, Col, Button } from 'react-bootstrap';
+import { Container, Col, Button, Toast } from 'react-bootstrap';
 import { withRouter, Switch, Route, Redirect, Link } from 'react-router-dom';
 // admin context
 import { AdminContext } from './context/AdminContext';
@@ -31,7 +31,9 @@ function App() {
       try {
         await API.getUserInfo();
         setLoggedIn(true);
-      } catch (err) {}
+      } catch (err) {
+        // mostly "unauthenticated user"
+      }
     };
     checkAuth();
   }, []);
@@ -44,7 +46,10 @@ function App() {
           setSurveys(survs);
           setLoading(false);
         })
-        .catch(err => setLoading(false));
+        .catch(err => { 
+          handleError(err);
+          setLoading(false)
+        });
   }, [loggedIn]);
 
 
@@ -55,14 +60,22 @@ function App() {
       API.createQuestions(_questions, surveyid);
       API.getSurveys().then(survs => setSurveys(survs));
     } catch(err){
-      setMessage(err);
+      handleError(err);
     }
+  }
+
+  /**
+   * Display message using the Toast
+   * @param {*} err 
+   */
+  const handleError = (err) => {
+    setMessage(err.error);
   }
 
   // add  a new Reply to the db and updates the 
   // number of answerer for that specific survey
   const addReply = (reply) => {
-     API.addReply(reply);
+     API.addReply(reply).catch(err => handleError(err));
   }
  
   /**
@@ -75,7 +88,7 @@ function App() {
       setLoggedIn(true);
       setMessage( `Welcome, ${user}!`);
     } catch (err) {
-      setMessage(err);
+      throw err;
     }
   }
 
@@ -90,8 +103,7 @@ function App() {
 
   const context = {
     loggedIn: loggedIn,
-    message: message,
-    setMessage: setMessage,
+    handleError: handleError,
     loading: loading
   }
 
@@ -99,10 +111,15 @@ function App() {
     <AdminContext.Provider value={context}>
       <Container fluid>
         <NavBar logout={logout}/>
+        
+        <Toast className="bg-primary" show={message !== ''} onClose={() => setMessage('')} delay={5000} autohide>
+          <Toast.Header>Survey-App says</Toast.Header>
+          <Toast.Body>{message}</Toast.Body>
+        </Toast>
 
         <Switch>
           <Route path="/login" render={() => {
-              return loggedIn ? <Redirect to="/surveys" /> : <LoginForm login={login} />
+              return loggedIn ? <Redirect to="/surveys" /> : <LoginForm login={login}/>
           }}/>
 
           <Route path='/surveys'>
