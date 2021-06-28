@@ -81,15 +81,23 @@ Only stores the survey and the questions in the db when the creation process is 
 
 ## Screenshot
 
-![Screenshot](./img/screenshot.jpg)
+![Screenshot](assets/screenshot.png)
 
 ## Extra: Demo
+### Create Survey
+<p align="center">
+  <img src="assets/demo_create.gif" alt="animated" />
+</p>
 
-# Create Survey
+### Reply Survey
+<p align="center">
+  <img src="assets/demo_reply.gif" alt="animated"/>
+</p>
 
-# Reply Survey
-
-# Show Results
+### Show Results
+<p align="center">
+  <img src="assets/demo_show.gif" alt="animated" />
+</p>
 
 ## Users Credentials
 

@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { Carousel } from 'react-bootstrap';
+import { Carousel, ProgressBar } from 'react-bootstrap';
 import SurveyForm from './SurveyForm';
 import API from '../api/api';
 
@@ -29,6 +29,7 @@ export default function AnswersSlideShow(props) {
   
     return (
       <>
+        {replies.length > 1 && <ProgressBar now={100/(replies.length - 1) * index} className="mx-auto progress-bar-top"/>}
         <Carousel  {...settings}>
           {
             replies && replies.map( r =>  
