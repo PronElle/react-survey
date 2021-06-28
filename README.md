@@ -5,7 +5,7 @@
 
 I tried to replicate the behavior of common websites where the very same route displays different things when you are logged vs when you're not.
 
-- Route '/login' : shows the login form
+- Route `/login` : shows the login form
 
 - Route `/surveys`: shows the available surveys or the admin's surveys if logged in
 
