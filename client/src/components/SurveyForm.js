@@ -1,6 +1,6 @@
 import React from 'react';
 import {useContext, useState, useRef, useEffect} from 'react';
-import { Form, Button, Container, ListGroup} from 'react-bootstrap';
+import { Form, Button, ListGroup } from 'react-bootstrap';
 import { Redirect } from 'react-router-dom';
 
 import { AdminContext } from '../context/AdminContext';
@@ -90,9 +90,8 @@ function SurveyForm(props){
     const context = useContext(AdminContext);
 
     return ( 
-      <Container fluid>
+      <>
        {submitted && <Redirect to='/surveys'></Redirect>}
-
         <Form ref={scrollRef} className="below-nav mx-auto questions ">
             {/* <SurveyHeader title={props.title} name={name} setName={setName} disabled={props.disabled} fillMode/> */}
             
@@ -110,7 +109,7 @@ function SurveyForm(props){
                 <Form.Group className={unans.includes(question) ? "question round-border invalid" : "question round-border"}>
                     {
                         question.options ? 
-                        <MCQuestion answers={() => ansAt(question.id)} question={question} onAnswer={onAnswer} disabled={props.disabled} showTooltip={props.showTooltip}/>
+                        <MCQuestion answers={() => ansAt(question.id)} question={question} onAnswer={onAnswer} disabled={props.disabled}/>
                         :
                         <OpenEndedQuestion answers={() => ansAt(question.id)} question={question} onAnswer={onAnswer} disabled={props.disabled}/>
                     }
@@ -122,7 +121,7 @@ function SurveyForm(props){
               { context.loggedIn ? "Close" : "Submit"}
             </Button>
         </Form>
-    </Container>
+    </>
    );
 }
 

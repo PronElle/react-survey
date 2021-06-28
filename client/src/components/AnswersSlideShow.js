@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react';
 import { Carousel } from 'react-bootstrap';
 import SurveyForm from './SurveyForm';
 import API from '../api/api';
-import { iconSad } from '../icons'; 
 
 export default function AnswersSlideShow(props) {
     const { title, surveyid, questions, setQuestions } = props;
@@ -22,17 +21,17 @@ export default function AnswersSlideShow(props) {
     }, [index, surveyid]);
 
     const settings = {
-      interval: null,
+      interval: null, // no autoscroll
       controls: replies.length > 1,
       activeIndex: index, 
       onSelect: handleSelect
     };
   
     return (
-        replies.length ? 
+      <>
         <Carousel  {...settings}>
           {
-            replies.map( r =>  
+            replies && replies.map( r =>  
               <Carousel.Item>
                 <SurveyForm title={title} surveyid={surveyid} 
                             name={r.name} answers={r.answers} 
@@ -40,20 +39,10 @@ export default function AnswersSlideShow(props) {
                             setQuestions={setQuestions}
                             disabled/>
               </Carousel.Item>
-              )
-                  
+              )   
           }
         </Carousel>
-        :
-        <div className="text-center below-nav">
-          <div className="text-center below-nav-center">{iconSad}</div>
-          
-          <h1>
-            Looks like nobody answered yet
-          </h1>
-        </div>
-      
-     
+      </>  
     );
   }
   

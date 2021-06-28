@@ -17,7 +17,7 @@ function QuestionForm(props) {
     const handleSubmit = (event) => {
         event.preventDefault();
         let valid = true;
-        
+
         // validation
         if(content.trim() === ''){
             valid = false;
@@ -29,12 +29,12 @@ function QuestionForm(props) {
                setErrorMessage('Multiple-choice question must have at least 1 option');
                valid = false;     
             }
-            else if(min > max ||  min >  ans_size || max > ans_size ){
-                setErrorMessage('Min and Max don\'t respect the constraints');
+            
+            if(min > max ||  min >  ans_size || max > ans_size ){
+                setErrorMessage('min and/or max don\'t respect the constraints');
                 valid = false;
             }
         }
-        
         if(valid) { 
             toggleModal();
             const question = {
@@ -118,8 +118,8 @@ function QuestionForm(props) {
                 { !openEnded && 
                     <Row>
                         <Col>
-                            <Form.Label className="my-1 mr-2" htmlFor="inlineFormCustomSelectPref">min</Form.Label>  
-                            <Form.Control as="select" className="" id="inlineFormCustomSelectPref" custom onChange={ ev => setMin(ev.target.value)} >
+                            <Form.Label className="my-1 mr-2" htmlFor="inlineFormCustomSelectPref">min</Form.Label>   
+                            <Form.Control as="select" className="" id="inlineFormCustomSelectPref" custom onChange={ ev => setMin(+ev.target.value)} >
                                 <option value="0">0</option>
                                 <option value="1">1</option>
                                 <option value="2">2</option>
@@ -136,7 +136,7 @@ function QuestionForm(props) {
 
                         <Col>
                             <Form.Label className="my-1 mr-2"  htmlFor="inlineFormCustomSelectPref">max</Form.Label>  
-                            <Form.Control as="select" className="" id="inlineFormCustomSelectPref" custom onChange={ ev => setMax(ev.target.value)}>
+                            <Form.Control as="select" className="" id="inlineFormCustomSelectPref" custom onChange={ ev => setMax(+ev.target.value)}>
                                 <option value="1">1</option>
                                 <option value="2">2</option>
                                 <option value="3">3</option>

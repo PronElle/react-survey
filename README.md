@@ -9,16 +9,29 @@
 
 ## API Server
 
-- POST `/api/login`
+- POST `/api/sessions`
   - request parameters and request body content
   - response body content
-- GET `/api/something`
+
+- GET `/api/sessions/current`
+
+- DELETE `/api/sessions/current`
+
+- GET `/api/surveys`
   - request parameters
   - response body content
-- POST `/api/something`
+
+- POST `/api/surveys`
   - request parameters and request body content
   - response body content
-- ...
+
+- GET `/api/questions`
+
+- POST `/api/questions`
+
+- GET `/api/replies`
+
+- POST `/api/replies`
 
 ## Database Tables
 
@@ -70,9 +83,17 @@ Only stores the survey and the questions in the db when the creation process is 
 
 ![Screenshot](./img/screenshot.jpg)
 
+## Extra: Demo
+
+# Create Survey
+
+# Reply Survey
+
+# Show Results
+
 ## Users Credentials
 
-| Username                | Passoword | Surveys |
-|-------------------------|-----------|---------|
-| john.doe@polito.it      | password  |         |
-| tony.stark@starkcorp.us | password  |         |
+| Username                | Passoword | Surveys             |
+|-------------------------|-----------|---------............|
+| john.doe@polito.it      | password  |  Euro2021, ..., ... |
+| tony.stark@starkcorp.us | password  |  ..., ...           |

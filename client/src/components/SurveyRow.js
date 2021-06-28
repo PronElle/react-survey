@@ -1,5 +1,5 @@
-import React, { useContext } from 'react';
-import { ListGroup } from 'react-bootstrap';
+import React, { useContext, useRef, useState } from 'react';
+import { ListGroup, Overlay, Tooltip } from 'react-bootstrap';
 import { iconReply, iconShow } from '../icons';
 import { Link } from 'react-router-dom';
 import { AdminContext } from '../context/AdminContext';
@@ -7,6 +7,8 @@ import { AdminContext } from '../context/AdminContext';
 function SurveyRow(props) {
   let { survey } = props;
   let context = useContext(AdminContext);
+  const [showTooltip, setShowTooltip] = useState(false);
+  const target = useRef(null);
 
   return (
     <ListGroup.Item as="li"  className="survey-row" variant="warning">
@@ -18,13 +20,22 @@ function SurveyRow(props) {
            <div>
                {context.loggedIn ?
                 <> 
-                    <small>Answers: {survey.answers} </small>
-                    <Link to = {'/survey/' + survey.id}><span> {iconShow}</span></Link>  
+                  <small>Answers: {survey.answers} </small>
+                  <Link to = {survey.answers ? '/survey/' + survey.id : '/surveys'}>
+                    <span ref={target} onClick={() => setShowTooltip(!showTooltip)}> {iconShow}</span>
+                    <Overlay target={target.current} show={showTooltip} placement="bottom">
+                      {(props) => (
+                        <Tooltip id="no-ans-tooltip" {...props}>
+                            This survey didn't receive any answer yet!
+                        </Tooltip>
+                        )}
+                    </Overlay>
+                  </Link>  
                 </> 
                 :
                 <>
-                    <small>Reply </small>
-                    <Link to = {'/survey/' + survey.id}><span>{iconReply}</span></Link>
+                  <small>Reply </small>
+                  <Link to = {'/survey/' + survey.id}><span>{iconReply}</span></Link>
                 </>
               }
             </div>         
