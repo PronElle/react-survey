@@ -182,6 +182,6 @@ Only stores the survey and the questions in the db when the creation process is 
 ## Users Credentials
 
 | Username                | Passoword | Surveys             |
-|-------------------------|-----------|---------............|
+|-------------------------|-----------|---------------------|
 | john.doe@polito.it      | password  |  Euro2020, Modern Cinema, Is AI taking over   |
 | tony.stark@starkcorp.us | password  |  Animated Movies           |

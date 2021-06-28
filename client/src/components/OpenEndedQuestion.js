@@ -40,20 +40,3 @@ function OpenEndedQuestion(props) {
 }
 
 export default OpenEndedQuestion;
-
-     // <div className="custom-control">
-        //     <div className="d-flex justify-content-between">
-        //         <label>{question.content}
-        //            <span onClick={() => deleteQuestion(question)}> {context.loggedIn && addMode && iconDelete}</span>
-        //         </label>
-        //         <span>{question.min >= 1 && iconRequired}</span>
-        //     </div>
-        //     <hr/>
-        //     <div>
-        //         <Form.Control as="textarea" maxLength="200"  rows={3}   placeholder="your answer (max 200 characters)" 
-        //         disabled={disabled} 
-        //         value = {answer}
-        //         onChange={ ev=> { setAnswer(ev.target.value); props.onAnswer(question.id, ev.target.value.trimStart()) }}
-        //         />      
-        //     </div>
-        // </div>   

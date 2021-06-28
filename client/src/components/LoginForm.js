@@ -46,7 +46,6 @@ function LoginForm(props) {
             </svg>
             
             <Form>
-
               <Form.Group className='login-form' controlId='username'>
                   <InputGroup hasValidation>
                     <InputGroup.Prepend >
@@ -64,16 +63,8 @@ function LoginForm(props) {
                   </InputGroup.Prepend>
                   
                   <Form.Control size="lg" type='password' value={password} placeholder="password" onChange={ev => setPassword(ev.target.value)} isInvalid={context.message !== ''}/>
-                  
-                  {/* <Form.Control.Feedback type="invalid">
-                    {context.message}
-                  </Form.Control.Feedback> */}
                 </InputGroup>  
               </Form.Group> 
-              
-                
-              
-
             </Form>
 
             <Row>

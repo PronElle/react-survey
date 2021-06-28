@@ -31,9 +31,7 @@ function App() {
       try {
         await API.getUserInfo();
         setLoggedIn(true);
-      } catch (err) {
-    //    setLoading(false); // not logged but loaded
-      }
+      } catch (err) {}
     };
     checkAuth();
   }, []);
@@ -101,6 +99,7 @@ function App() {
     <AdminContext.Provider value={context}>
       <Container fluid>
         <NavBar logout={logout}/>
+
         <Switch>
           <Route path="/login" render={() => {
               return loggedIn ? <Redirect to="/surveys" /> : <LoginForm login={login} />
